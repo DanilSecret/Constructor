@@ -1,0 +1,27 @@
+server:
+  port: 8080
+  ip: 0.0.0.0
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432
+    username: postgres
+    password:
+  security:
+    basic:
+      enabled: false
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: false
+    show-sql: false
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    baseline-on-migrate: true
+  management:
+    endpoint:
+      health:
+        show-details: always

@@ -5,6 +5,9 @@
       <module name="back" target="21" />
       <module name="back.main" target="21" />
       <module name="back.test" target="21" />
+      <module name="constructor" target="21" />
+      <module name="constructor.main" target="21" />
+      <module name="constructor.test" target="21" />
     </bytecodeTargetLevel>
   </component>
 </project>
