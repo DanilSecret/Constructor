@@ -7,5 +7,5 @@ import uisi.ru.constructor.repository.HistoryRepository
 class HistoryService(
     private val historyRepository: HistoryRepository
 ) {
-
+//
 }

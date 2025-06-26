@@ -11,13 +11,13 @@ import java.util.UUID
 @Table(name = "History")
 data class History(
     @Id
-    @Column(name = "id", nullable = false)
+    @Column(name = "uuid", nullable = false)
     val uuid: UUID,
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_uuid", nullable = false)
     @JsonIgnoreProperties(value = ["hibernateLazyInitializer","handler"])
-    val user_uuid: User,
+    val user: User,
 
     @Type(value = JsonBinaryType::class)
     @Column(name = "request", nullable = false, columnDefinition = "jsonb")
