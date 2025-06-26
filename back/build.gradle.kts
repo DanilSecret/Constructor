@@ -20,6 +20,7 @@ repositories {
 }
 
 dependencies {
+	implementation("com.vladmihalcea:hibernate-types-60:2.21.1")
 	implementation("io.jsonwebtoken:jjwt-api:0.11.5")
 	implementation("org.springframework.boot:spring-boot-starter-actuator")
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa")

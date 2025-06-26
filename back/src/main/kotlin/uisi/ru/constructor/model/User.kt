@@ -8,13 +8,16 @@ import jakarta.persistence.Table
 
 
 @Entity
-@Table(name="users")
+@Table(name="Users")
 data class User(
     @Id
-    val id: String,
+    @Column(name = "uuid", nullable = false, columnDefinition = "uuid")
+    val uuid: String,
     @Column(name = "email", nullable = false, unique = true, columnDefinition = "TEXT")
     val email: String,
     @Column(name = "password", nullable = false, columnDefinition = "TEXT")
     @JsonIgnore
-    val password: String
+    val password: String,
+    @Column(name = "role", nullable = false, columnDefinition = "TEXT")
+    val role: String
 )

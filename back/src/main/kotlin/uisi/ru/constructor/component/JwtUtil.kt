@@ -11,8 +11,8 @@ import javax.crypto.SecretKey
 @Component
 object JwtUtil {
     private val secretKey: SecretKey = Keys.secretKeyFor(SignatureAlgorithm.HS256)
-    private val accessExpirationMs: Long = 24 * 60 * 60 * 1000
-    private val refreshExpirationMs: Long = 7 * 24 * 60 * 60 * 1000
+    private val accessExpirationMs: Long = 365 * 24 * 60 * 60 * 1000
+    private val refreshExpirationMs: Long = 365 * 24 * 60 * 60 * 1000
 
     fun getClaims(token: String): Claims {
         return Jwts.parserBuilder()

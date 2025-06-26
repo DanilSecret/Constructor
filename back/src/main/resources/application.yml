@@ -4,9 +4,9 @@ server:
 
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432
+    url: jdbc:postgresql://localhost:5432/Constructor
     username: postgres
-    password:
+    password: 2451
   security:
     basic:
       enabled: false
