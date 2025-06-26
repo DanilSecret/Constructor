@@ -35,6 +35,7 @@ class SecurityConfig(
             .authorizeHttpRequests{
                 it.requestMatchers("/api/v0.1/auth/**").permitAll()
                 it.requestMatchers("/actuator/health").permitAll()
+                it.requestMatchers("/api/v0.1/user/**").permitAll()
 
                 it.requestMatchers("/api/v0.1/admin/**").hasAuthority("ADMIN")// эндпоинты для ролей
                 it.anyRequest().authenticated()

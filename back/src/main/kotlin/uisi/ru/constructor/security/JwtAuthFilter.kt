@@ -11,9 +11,11 @@ import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource
 import org.springframework.stereotype.Component
 import org.springframework.web.filter.OncePerRequestFilter
+import uisi.ru.constructor.repository.UserRepository
 
 @Component
 class JwtAuthFilter(
+    private val userRepository: UserRepository,
     private val jwtUtil: JwtUtil
 ):OncePerRequestFilter() {
     override fun doFilterInternal(
@@ -32,7 +34,7 @@ class JwtAuthFilter(
         try{
             val email = jwtUtil.getClaims(token).subject
             if(email != null && SecurityContextHolder.getContext().authentication == null) {
-                val userDetails = //получение user'a
+                val userDetails = userRepository.findByEmail(email)
                 userDetails?.let {
                     if (jwtUtil.validateToken(token, userDetails.email)) {
                         val authorities = listOf(SimpleGrantedAuthority(userDetails.role))

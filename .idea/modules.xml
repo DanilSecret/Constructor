@@ -2,10 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/Constructor.iml" filepath="$PROJECT_DIR$/Constructor.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/constructor.iml" filepath="$PROJECT_DIR$/.idea/modules/constructor.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/constructor.main.iml" filepath="$PROJECT_DIR$/.idea/modules/constructor.main.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/constructor.test.iml" filepath="$PROJECT_DIR$/.idea/modules/constructor.test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/Constructor.iml" filepath="$PROJECT_DIR$/.idea/Constructor.iml" />
     </modules>
   </component>
 </project>

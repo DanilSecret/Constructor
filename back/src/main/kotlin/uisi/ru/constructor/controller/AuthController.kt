@@ -9,15 +9,16 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import uisi.ru.constructor.component.JwtUtil
 import uisi.ru.constructor.model.UserLogin
+import uisi.ru.constructor.service.UserService
 
 @RestController
-@RequestMapping
+@RequestMapping("/api/v0.1/auth")
 class AuthController(
-    private val jwtUtil: JwtUtil
+    private val userService: UserService
 ) {
 
     @GetMapping("/login")
     fun login(@RequestBody request: UserLogin): ResponseEntity<Any> {
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).body("123")
+        return userService.login(request)
     }
 }
