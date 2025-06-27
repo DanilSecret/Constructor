@@ -1,0 +1,45 @@
+package uisi.ru.constructor.controller
+
+import org.springframework.http.ResponseEntity
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
+import org.springframework.stereotype.Controller
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.multipart.MultipartFile
+import uisi.ru.constructor.model.DevRequest
+import uisi.ru.constructor.model.DevResponse
+import uisi.ru.constructor.model.ResponseError
+import uisi.ru.constructor.model.Roles
+import uisi.ru.constructor.service.StudentsService
+import uisi.ru.constructor.service.UserService
+import java.util.*
+
+@Controller
+@RequestMapping("/api/v0.1/user")
+class UserController(
+    private val userService: UserService,
+    private val studentsService: StudentsService
+) {
+    @PostMapping("/upload")
+    fun uploadXlsx(file: MultipartFile) {
+        studentsService.uploadXlsx(file.inputStream)
+    }
+
+    @GetMapping("/dev")
+    fun dev(@RequestBody dev: DevRequest): ResponseEntity<Any> {
+        val passwordEncoder = BCryptPasswordEncoder()
+        try {
+            return ResponseEntity.ok().body(DevResponse(
+                uuid = UUID.randomUUID(),
+                email = dev.email,
+                password = passwordEncoder.encode(dev.password),
+                role = Roles.valueOf(dev.role).toString()
+            ))
+        }
+        catch (e: Exception) {
+            return ResponseEntity.badRequest().body(ResponseError(e.message.toString()))
+        }
+    }
+}
