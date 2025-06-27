@@ -6,7 +6,7 @@ spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/Constructor
     username: postgres
-    password: 2451
+    password: admin
   security:
     basic:
       enabled: false

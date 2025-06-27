@@ -21,7 +21,7 @@ class UserService(
     fun login(userLogin: UserLogin): ResponseEntity<Any> {
         val user = userRepository.findByEmail(userLogin.email)
         user?.let {
-            if (validatePassword(user.password, user)) {
+            if (validatePassword(userLogin.password, user)) {
                 val token = jwtUtil.generateAccessToken(user.email)
                 return ResponseEntity.ok().body(ResponseLogin(user, token))
             }

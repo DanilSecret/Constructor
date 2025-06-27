@@ -29,7 +29,7 @@ class SecurityConfig(
     @Bean
     fun securityFilterChain(http: HttpSecurity): SecurityFilterChain {
         http
-            .cors{}
+//            .cors{}
             .csrf{ it.disable()}
             .sessionManagement{ it.sessionCreationPolicy(SessionCreationPolicy.STATELESS)}
             .authorizeHttpRequests{
