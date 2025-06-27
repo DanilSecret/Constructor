@@ -1,15 +1,15 @@
 package uisi.ru.constructor.service
 
+import jakarta.servlet.http.Cookie
+import jakarta.servlet.http.HttpServletResponse
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Service
 import uisi.ru.constructor.component.JwtUtil
-import uisi.ru.constructor.model.ResponseLogin
-import uisi.ru.constructor.model.ResponseMessage
-import uisi.ru.constructor.model.User
-import uisi.ru.constructor.model.UserLogin
+import uisi.ru.constructor.model.*
 import uisi.ru.constructor.repository.UserRepository
+import java.util.*
 
 @Service
 class UserService(
@@ -18,12 +18,35 @@ class UserService(
 ) {
     private val passwordEncoder = BCryptPasswordEncoder()
 
-    fun login(userLogin: UserLogin): ResponseEntity<Any> {
+    fun register(userRegister: UserRegister): ResponseEntity<Any> {
+        val user = userRepository.findByEmail(userRegister.email)?.let { return ResponseEntity.badRequest().body(ResponseMessage("Пользователь с таким email уже есть")) }
+        try {
+            val newUser = User(
+                uuid = UUID.randomUUID(),
+                email = userRegister.email,
+                password = passwordEncoder.encode(userRegister.password),
+                role = Roles.valueOf(userRegister.role).toString(),
+            )
+            userRepository.save(newUser)
+            return ResponseEntity.ok().body(ResponseMessage("Новый пользователь успешно добавлен"))
+        }
+        catch (e: Exception) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ResponseError(e.message.toString()))
+        }
+    }
+
+    fun login(userLogin: UserLogin, response: HttpServletResponse): ResponseEntity<Any> {
         val user = userRepository.findByEmail(userLogin.email)
         user?.let {
             if (validatePassword(userLogin.password, user)) {
                 val token = jwtUtil.generateAccessToken(user.email)
-                return ResponseEntity.ok().body(ResponseLogin(user, token))
+                val cookie = Cookie("token", token).apply {
+                    isHttpOnly = true
+                    path = "/"
+                    maxAge = 60*60*24*365
+                }
+                response.addCookie(cookie)
+                return ResponseEntity.ok().body(ResponseLogin(user))
             }
             else {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ResponseMessage("Неверный пароль"))
