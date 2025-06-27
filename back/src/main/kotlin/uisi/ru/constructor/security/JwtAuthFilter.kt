@@ -23,14 +23,13 @@ class JwtAuthFilter(
         response: HttpServletResponse,
         filterChain: FilterChain
     ) {
-        val authHeader = request.getHeader("Authorization")
+        val token = request.cookies?.firstOrNull { it.name == "token" }?.value
 
-        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+        if (token == null) {
             filterChain.doFilter(request, response)
             return
         }
 
-        val token = authHeader.replace("Bearer ","")
         try{
             val email = jwtUtil.getClaims(token).subject
             if(email != null && SecurityContextHolder.getContext().authentication == null) {
