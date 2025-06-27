@@ -1,13 +1,14 @@
 "use client";
 
 import {useForm} from "react-hook-form";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import * as Yup from "yup";
 import {yupResolver} from "@hookform/resolvers/yup";
 import {LoginFormData} from "../models/models";
 
 import {useUserStore} from "@/store/store";
 import AuthUser from "@/app/Api/Api";
+import {nextLint} from "next/dist/cli/next-lint";
 // import Header from "@/app/components/header";
 
 const validationSchema = Yup.object().shape({
@@ -27,6 +28,11 @@ export default function Login_form() {
     const {register, handleSubmit, formState: {errors}} = useForm({
         resolver: yupResolver(validationSchema)
     })
+
+    useEffect(()=>{
+        setIsAuth(false)
+        setUserData(null)
+    }, [])
 
     const onSubmit = async (data: LoginFormData) => {
         try {

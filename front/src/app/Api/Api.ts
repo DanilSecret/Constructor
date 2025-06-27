@@ -4,7 +4,7 @@ import axios, { AxiosError } from "axios";
 
 export default async function AuthUser(email: string, password: string) {
     try {
-        const response = await axios.post("http://localhost:8080/api/auth/login", { email, password }, { timeout: 10000 });
+        const response = await axios.post("http://localhost:8080/api/auth/login", { email, password }, { withCredentials: true, timeout: 10000 });
         const { result } = response.data;
         return { success: true, message: 'Успешный вход', result: result };
     } catch (err) {
