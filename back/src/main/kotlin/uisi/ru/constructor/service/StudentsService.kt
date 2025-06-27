@@ -10,6 +10,15 @@ import java.util.*
 
 @Service
 class StudentsService {
+    fun String.toBooleanRu(): Boolean? {
+        return when(this.trim().toLowerCase()) {
+            "true" -> true;
+            "false" -> false;
+            "да" -> true;
+            "нет" -> false;
+            else -> null;
+        }
+    }
     fun uploadXlsx(file: InputStream): ResponseEntity<Any> {
         try {
             val workbook = XSSFWorkbook(file)
@@ -36,8 +45,8 @@ class StudentsService {
                             passportSource = row.getCell(12).stringCellValue,
                             snils = row.getCell(13).stringCellValue,
                             medPolicy = row.getCell(14).stringCellValue,
-                            foreigner = row.getCell(15).booleanCellValue,
-                            quota = row.getCell(16).booleanCellValue,
+                            foreigner = row.getCell(15).stringCellValue.toBooleanRu()?: return ResponseEntity.badRequest().body("не задано значение ${sheet.getRow(0).getCell(15)}"),
+                            quota = row.getCell(16).stringCellValue.toBooleanRu()?: return ResponseEntity.badRequest().body("не задано значение ${sheet.getRow(0).getCell(16)}"),
                             enrlDate = row.getCell(17).dateCellValue,
                             enrlOrderDate = row.getCell(18).dateCellValue,
                             enrlOrderNumber = row.getCell(19).stringCellValue,
