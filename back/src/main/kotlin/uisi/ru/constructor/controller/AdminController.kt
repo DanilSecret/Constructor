@@ -1,26 +1,23 @@
 package uisi.ru.constructor.controller
 
-import jakarta.servlet.http.HttpServletResponse
-import org.springframework.http.HttpStatus
-import org.springframework.http.HttpStatusCode
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import uisi.ru.constructor.component.JwtUtil
 import uisi.ru.constructor.model.UserLogin
+import uisi.ru.constructor.model.UserRegister
 import uisi.ru.constructor.service.UserService
 
 @RestController
-@RequestMapping("/api/auth")
-class AuthController(
-    private val userService: UserService
+@RequestMapping("/api/admin")
+class AdminController(
+    private val userService: UserService,
+    private val jwtUtil: JwtUtil
 ) {
-
-    @PostMapping("/login")
-    fun login(@RequestBody request: UserLogin, response: HttpServletResponse): ResponseEntity<Any> {
-        return userService.login(request, response)
+    @PostMapping("/register")
+    fun register(@RequestBody user: UserRegister): ResponseEntity<Any> {
+        return userService.register(user)
     }
 }
