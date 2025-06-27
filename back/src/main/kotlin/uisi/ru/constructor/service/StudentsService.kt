@@ -20,61 +20,77 @@ class StudentsService {
         }
     }
     fun uploadXlsx(file: InputStream): ResponseEntity<Any> {
+        var rowi: Int = 0
         try {
             val workbook = XSSFWorkbook(file)
             val sheet = workbook.getSheetAt(0)
 
             val table: MutableList<Student> = emptyList<Student>().toMutableList()
             for (i in 1..sheet.lastRowNum) {
+                rowi = i
                 val row = sheet.getRow(i)
                 if (row != null) {
-                    table.add(
-                        Student(
-                            uuid = UUID.randomUUID(),
-                            surname = row.getCell(0).stringCellValue,
-                            name = row.getCell(1).stringCellValue,
-                            patronymic = row.getCell(2).stringCellValue,
-                            gender = row.getCell(3).stringCellValue,
-                            birthday = row.getCell(4).dateCellValue,
-                            phone = row.getCell(5).stringCellValue,
-                            regAddr = row.getCell(6).stringCellValue,
-                            actAddr = row.getCell(7).stringCellValue,
-                            passportSerial = row.getCell(8).stringCellValue,
-                            passportNumber = row.getCell(10).stringCellValue,
-                            passportDate = row.getCell(11).dateCellValue,
-                            passportSource = row.getCell(12).stringCellValue,
-                            snils = row.getCell(13).stringCellValue,
-                            medPolicy = row.getCell(14).stringCellValue,
-                            foreigner = row.getCell(15).stringCellValue.toBooleanRu()?: return ResponseEntity.badRequest().body("не задано значение ${sheet.getRow(0).getCell(15)}"),
-                            quota = row.getCell(16).stringCellValue.toBooleanRu()?: return ResponseEntity.badRequest().body("не задано значение ${sheet.getRow(0).getCell(16)}"),
-                            enrlDate = row.getCell(17).dateCellValue,
-                            enrlOrderDate = row.getCell(18).dateCellValue,
-                            enrlOrderNumber = row.getCell(19).stringCellValue,
-                            studId = row.getCell(20).stringCellValue,
-                            studIdDate = row.getCell(21).dateCellValue,
-                            group = row.getCell(22).stringCellValue,
-                            educationLevel = row.getCell(23).stringCellValue,
-                            fundSrc = row.getCell(24).stringCellValue,
-                            course = row.getCell(25).stringCellValue.toInt().toShort(),
-                            studyForm = row.getCell(26).stringCellValue,
-                            program = row.getCell(27).stringCellValue,
-                            programCode = row.getCell(28).stringCellValue,
-                            profile = row.getCell(29).stringCellValue,
-                            duration = row.getCell(30).stringCellValue.toInt(),
-                            regEndDate = row.getCell(31).dateCellValue,
-                            actEndDate = row.getCell(32).dateCellValue,
-                            orderEndDate = row.getCell(33).dateCellValue,
-                            orderEndNumber = row.getCell(34).stringCellValue,
-                            acadStartDate = row.getCell(35).dateCellValue,
-                            acadEndDate = row.getCell(36).dateCellValue,
-                            orderAcadDate = row.getCell(37).dateCellValue,
-                            orderAcadNumber = row.getCell(38).stringCellValue
-                        )
-                    )
+                    for(j in 0..row.lastCellNum){
+                        try {
+                            println(row.getCell(j).stringCellValue)
+                        } catch (ex: Exception) {
+                            println(ex.message.toString())
+                            try {
+                                println(row.getCell(j).dateCellValue)
+                            }
+                            catch (ex2: Exception){
+                                println(ex2.message.toString())
+                            }
+                        }
+
+                    }
+//                    table.add(
+//                        Student(
+//                            uuid = UUID.randomUUID(),
+//                            surname = row.getCell(0).stringCellValue,
+//                            name = row.getCell(1).stringCellValue,
+//                            patronymic = row.getCell(2).stringCellValue,
+//                            gender = row.getCell(3).stringCellValue,
+//                            birthday = row.getCell(4).dateCellValue,
+//                            phone = row.getCell(5).stringCellValue,
+//                            regAddr = row.getCell(6).stringCellValue,
+//                            actAddr = row.getCell(7).stringCellValue,
+//                            passportSerial = row.getCell(8).stringCellValue,
+//                            passportNumber = row.getCell(10).stringCellValue,
+//                            passportDate = row.getCell(11).dateCellValue,
+//                            passportSource = row.getCell(12).stringCellValue,
+//                            snils = row.getCell(13).stringCellValue,
+//                            medPolicy = row.getCell(14).stringCellValue,
+//                            foreigner = row.getCell(15).stringCellValue.toBooleanRu()?: return ResponseEntity.badRequest().body("не задано значение ${sheet.getRow(0).getCell(15)}"),
+//                            quota = row.getCell(16).stringCellValue.toBooleanRu()?: return ResponseEntity.badRequest().body("не задано значение ${sheet.getRow(0).getCell(16)}"),
+//                            enrlDate = row.getCell(17).dateCellValue,
+//                            enrlOrderDate = row.getCell(18).dateCellValue,
+//                            enrlOrderNumber = row.getCell(19).stringCellValue,
+//                            studId = row.getCell(20).stringCellValue,
+//                            studIdDate = row.getCell(21).dateCellValue,
+//                            group = row.getCell(22).stringCellValue,
+//                            educationLevel = row.getCell(23).stringCellValue,
+//                            fundSrc = row.getCell(24).stringCellValue,
+//                            course = row.getCell(25).stringCellValue.toInt().toShort(),
+//                            studyForm = row.getCell(26).stringCellValue,
+//                            program = row.getCell(27).stringCellValue,
+//                            programCode = row.getCell(28).stringCellValue,
+//                            profile = row.getCell(29).stringCellValue,
+//                            duration = row.getCell(30).stringCellValue.toInt(),
+//                            regEndDate = row.getCell(31).dateCellValue,
+//                            actEndDate = row.getCell(32).dateCellValue,
+//                            orderEndDate = row.getCell(33).dateCellValue,
+//                            orderEndNumber = row.getCell(34).stringCellValue,
+//                            acadStartDate = row.getCell(35).dateCellValue,
+//                            acadEndDate = row.getCell(36).dateCellValue,
+//                            orderAcadDate = row.getCell(37).dateCellValue,
+//                            orderAcadNumber = row.getCell(38).stringCellValue
+//                        )
+//                    )
                 }
             }
             return ResponseEntity.ok().body(table)
         }
-        catch (e: Exception) { return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.message.toString()) }
+        catch (e: Exception) { return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.message.toString()+rowi) }
     }
 }
