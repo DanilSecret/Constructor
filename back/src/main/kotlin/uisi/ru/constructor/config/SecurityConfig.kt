@@ -29,15 +29,15 @@ class SecurityConfig(
     @Bean
     fun securityFilterChain(http: HttpSecurity): SecurityFilterChain {
         http
-//            .cors{}
+            .cors{}
             .csrf{ it.disable()}
             .sessionManagement{ it.sessionCreationPolicy(SessionCreationPolicy.STATELESS)}
             .authorizeHttpRequests{
-                it.requestMatchers("/api/v0.1/auth/**").permitAll()
+                it.requestMatchers("/api/auth/**").permitAll()
                 it.requestMatchers("/actuator/health").permitAll()
-                it.requestMatchers("/api/v0.1/user/**").permitAll()
+                it.requestMatchers("/api/user/**").permitAll()
 
-                it.requestMatchers("/api/v0.1/admin/**").hasAuthority("ADMIN")// эндпоинты для ролей
+                it.requestMatchers("/api/admin/**").hasAuthority("ADMIN")// эндпоинты для ролей
                 it.anyRequest().authenticated()
             }
             .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter::class.java)
