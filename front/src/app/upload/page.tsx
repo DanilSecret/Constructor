@@ -66,7 +66,7 @@ export default function FileUploadPage() {
         if (!isAuth) {
             router.push('/sign_in/');
         }
-    }, [isAuth, hydrated]);
+    }, [isAuth, hydrated, router]);
 
     if (!hydrated) {
         return (

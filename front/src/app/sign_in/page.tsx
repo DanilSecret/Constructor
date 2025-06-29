@@ -8,7 +8,6 @@ import {LoginFormData} from "../models/models";
 
 import {useUserStore} from "@/store/store";
 import AuthUser from "@/app/Api/Api";
-import {nextLint} from "next/dist/cli/next-lint";
 // import Header from "@/app/components/header";
 
 const validationSchema = Yup.object().shape({
@@ -32,7 +31,7 @@ export default function Login_form() {
     useEffect(()=>{
         setIsAuth(false)
         setUserData(null)
-    }, [])
+    }, [setIsAuth, setUserData])
 
     const onSubmit = async (data: LoginFormData) => {
         try {
