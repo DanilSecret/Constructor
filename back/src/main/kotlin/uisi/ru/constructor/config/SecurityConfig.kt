@@ -36,9 +36,10 @@ class SecurityConfig(
             .authorizeHttpRequests{
                 it.requestMatchers("/api/auth/**").permitAll()
                 it.requestMatchers("/actuator/health").permitAll()
+                it.requestMatchers("/api/user/**").permitAll()
 
                 it.requestMatchers("/api/admin/**").hasAuthority("ADMIN")
-                it.requestMatchers("/api/user/**").hasAnyAuthority(Roles.METHODIST.toString(),Roles.ADMIN.toString(),Roles.DEANERY.toString())// эндпоинты для ролей
+//                it.requestMatchers("/api/user/**").hasAnyAuthority(Roles.METHODIST.toString(),Roles.ADMIN.toString(),Roles.DEANERY.toString())// эндпоинты для ролей
                 it.anyRequest().authenticated()
             }
             .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter::class.java)
