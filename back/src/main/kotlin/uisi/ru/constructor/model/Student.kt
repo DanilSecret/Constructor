@@ -18,19 +18,19 @@ data class Student(
     @Column(name = "name", nullable = false, columnDefinition = "text")
     val name: String,
     @Column(name = "patronymic", nullable = true, columnDefinition = "text")
-    val patronymic: String,
+    val patronymic: String? = null,
     @Column(name = "gender", nullable = false, columnDefinition = "text")
     val gender: String,
     @Column(name = "birthday", nullable = false, columnDefinition = "date")
     val birthday: Date,
     @Column(name = "phone", nullable = true, columnDefinition = "text")
-    val phone: String,
+    val phone: String? = null,
     @Column(name = "reg_addr", nullable = false, columnDefinition = "text")
     val regAddr: String,
     @Column(name = "act_addr", nullable = false, columnDefinition = "text")
     val actAddr: String,
     @Column(name = "passport_serial", nullable = true, columnDefinition = "text")
-    val passportSerial: String,
+    val passportSerial: String? = null,
     @Column(name = "passport_number", nullable = false, columnDefinition = "text")
     val passportNumber: String,
     @Column(name = "passport_date", nullable = false, columnDefinition = "date")
@@ -38,9 +38,9 @@ data class Student(
     @Column(name = "passport_source", nullable = false, columnDefinition = "text")
     val passportSource: String,
     @Column(name = "snils", nullable = true, columnDefinition = "text")
-    val snils: String,
+    val snils: String? = null,
     @Column(name = "med_policy", nullable = true, columnDefinition = "text")
-    val medPolicy: String,
+    val medPolicy: String? = null,
     @Column(name = "foreigner", nullable = false, columnDefinition = "boolean")
     val foreigner: Boolean,
     @Column(name = "quota", nullable = false, columnDefinition = "boolean")
@@ -52,11 +52,11 @@ data class Student(
     @Column(name = "enrl_order_number", nullable = false, columnDefinition = "text")
     val enrlOrderNumber: String,
     @Column(name = "stud_id", nullable = true, columnDefinition = "text")
-    val studId: String,
+    val studId: String? = null,
     @Column(name = "stud_id_date", nullable = true, columnDefinition = "date")
-    val studIdDate: Date,
-    @Column(name = "group", nullable = true, columnDefinition = "text")
-    val group: String,
+    val studIdDate: Date? = null,
+    @Column(name = "\"group\"", nullable = true, columnDefinition = "text")
+    val group: String? = null,
     @Column(name = "education_level", nullable = false, columnDefinition = "text")
     val educationLevel: String,
     @Column(name = "fund_src", nullable = false, columnDefinition = "text")
@@ -76,17 +76,17 @@ data class Student(
     @Column(name = "reg_end_date", nullable = false, columnDefinition = "date")
     val regEndDate: Date,
     @Column(name = "act_end_date", nullable = true, columnDefinition = "date")
-    val actEndDate: Date,
+    val actEndDate: Date? = null,
     @Column(name = "order_end_date", nullable = true, columnDefinition = "date")
-    val orderEndDate: Date,
+    val orderEndDate: Date? = null,
     @Column(name = "order_end_number", nullable = true, columnDefinition = "text")
-    val orderEndNumber: String,
+    val orderEndNumber: String? = null,
     @Column(name = "acad_start_date", nullable = true, columnDefinition = "date")
-    val acadStartDate: Date,
+    val acadStartDate: Date? = null,
     @Column(name = "acad_end_date", nullable = true, columnDefinition = "date")
-    val acadEndDate: Date,
+    val acadEndDate: Date? = null,
     @Column(name = "order_acad_date", nullable = true, columnDefinition = "date")
-    val orderAcadDate: Date,
+    val orderAcadDate: Date? = null,
     @Column(name = "order_acad_numper", nullable = true, columnDefinition = "text")
-    val orderAcadNumber: String,
+    val orderAcadNumber: String? = null,
 )
