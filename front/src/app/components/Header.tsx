@@ -1,0 +1,48 @@
+"use client";
+
+import Image from "next/image";
+import Link from "next/link";
+import { useUserStore } from "@/store/store";
+
+export default function Header() {
+    const isAuth = useUserStore((state) => state.isAuth);
+    const { setUserData, setIsAuth } = useUserStore();
+
+    const destroyCookie = () => {
+        setUserData(null);
+        setIsAuth(false);
+        window.location.href = '/sign_in/';
+    };
+
+    return (
+        <header className="bg-[#2C3E50] text-white w-full px-4 py-3 shadow-md">
+            <div className="max-w-screen-xl mx-auto flex items-center justify-between">
+                <div className="flex items-center gap-4">
+                    <nav className="flex items-center gap-6 text-sm">
+                        <Link href="/" className="hover:underline">Главная</Link>
+                        <Link href="/upload" className="hover:underline">Загрузить файл</Link>
+                        <Link href="/create_report" className="hover:underline">Создать отчет</Link>
+                        <Link href="/history" className="hover:underline">История отчетов</Link>
+                    </nav>
+                </div>
+                <div className="flex items-center gap-6 text-sm">
+                    {isAuth ? (
+                        <div className="flex items-center gap-4">
+                            <button
+                                onClick={destroyCookie}
+                                className="hover:underline flex flex-row gap-2"
+                            >
+                                Выйти
+                                <Image src="/exit.svg" alt="exit" width={20} height={20}/>
+                            </button>
+                        </div>
+                    ) : (
+                        <Link href="/sign_in" className="hover:underline">
+                            Войти
+                        </Link>
+                    )}
+                </div>
+            </div>
+        </header>
+    );
+}
