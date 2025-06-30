@@ -26,8 +26,8 @@ class StudentsService(
 
             val table: MutableList<Student> = emptyList<Student>().toMutableList()
 
-            val names = sheet.getRow(0)?: return ResponseEntity.badRequest().body(ResponseMessage("Не заданы названия столбцов таблицы"))
-            if (names.physicalNumberOfCells != 38) { return ResponseEntity.badRequest().body(ResponseMessage("Некорректный формат таблицы")) }
+            val names = sheet.getRow(0)?: return ResponseEntity.badRequest().body(ResponseMessage("Не заданы названия столбцов таблицы", false))
+            if (names.physicalNumberOfCells != 38) { return ResponseEntity.badRequest().body(ResponseMessage("Некорректный формат таблицы", false)) }
 
             for (i in 1..sheet.lastRowNum) {
                 val row = sheet.getRow(i)
@@ -49,9 +49,9 @@ class StudentsService(
                 catch (re: Exception) {throw RuntimeException("Ошибка при создании записи ${i+1}: ${re.message.toString()}")}
             }
 
-            return ResponseEntity.ok().body(ResponseMessage("${table.size} записей успешно обработано"))
+            return ResponseEntity.ok().body(ResponseMessage("${table.size} записей успешно обработано", true))
         }
-        catch (e: Exception) { return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ResponseMessage(e.message.toString())) }
+        catch (e: Exception) { return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ResponseMessage(e.message.toString(), false)) }
     }
 
     fun getCols(): ResponseEntity<Any> {

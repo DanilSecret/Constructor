@@ -12,10 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.multipart.MultipartFile
-import uisi.ru.constructor.model.UserRegister
-import uisi.ru.constructor.model.DevResponse
-import uisi.ru.constructor.model.ResponseError
-import uisi.ru.constructor.model.Roles
+import uisi.ru.constructor.model.*
 import uisi.ru.constructor.service.StudentsService
 import uisi.ru.constructor.service.UserService
 import java.util.*
@@ -45,7 +42,7 @@ class UserController(
     @PostMapping("/upload")
     fun uploadXlsx(file: MultipartFile): ResponseEntity<Any> {
         if (file.isEmpty) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ResponseError("Файл пустой или отсутствует"))
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ResponseMessage("Файл пустой или отсутствует",false))
         }
         return studentsService.uploadXlsx(file.inputStream)
     }
