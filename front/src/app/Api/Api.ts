@@ -1,5 +1,7 @@
 
 import axios, { AxiosError } from "axios";
+import {Columns} from "@/app/models/models";
+import {handleAxiosError} from "@/app/Api/handleAxiosError";
 
 export default async function AuthUser(email: string, password: string) {
     try {
@@ -40,7 +42,7 @@ export async function logout() {
     });
 }
 
-export async function UploadFile(file: File): Promise<{ success: boolean; message?: string }> {
+export async function UploadFile(file: File): Promise<{ success: boolean; message?: string; response?:[] }> {
     const formData = new FormData();
     formData.append("file", file);
     try {
@@ -50,14 +52,24 @@ export async function UploadFile(file: File): Promise<{ success: boolean; messag
             },
             withCredentials: true,
         });
-        return response.data;
-    } catch (err) {
-        const error = err as AxiosError<{ message: string }>;
-        console.error("Ошибка при отправке:", error);
         return {
-            success: false,
-            message: error.response?.data?.message || error.message,
+            success: true,
+            response: response.data,
         };
+    } catch (err) {
+        return handleAxiosError(err, "отправке файла");
     }
 }
 
+export async function GetAllColumns(): Promise<{ success: boolean; message?: string; data?: Columns[]; }> {
+    try {
+        const response = await axios.get<Columns[]>("http://localhost:8080/api/user/getCols",{withCredentials: true,});
+
+        return {
+            success: true,
+            data: response.data,
+        };
+    }catch (err) {
+        return handleAxiosError(err, "получении колонок");
+    }
+}

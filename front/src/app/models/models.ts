@@ -6,3 +6,8 @@ export interface LoginFormData {
 export interface FormData{
     file: FileList;
 }
+
+export interface Columns{
+    id: string;
+    name: string;
+}
