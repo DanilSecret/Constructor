@@ -11,26 +11,25 @@ class StudentDataBuilder: IStudentDataBuilder {
     private val dateFormatter = SimpleDateFormat("dd.MM.yyyy")
     private val formatter = DataFormatter()
 
-    private val values: Array<Any?> = Array<Any?> (38) {null}
+    val values: Array<Any?> = Array<Any?> (38) {null}
 
     private val stringNullableValues: Array<Columns> = arrayOf(
         Columns.PATRONYMIC, Columns.PHONE,
         Columns.PASSPORT_SERIAL, Columns.SNILS,
-        Columns.MED_POLICY, Columns.STUD_ID,
-        Columns.GROUP, Columns.ORDER_END_NUMBER,
-        Columns.ORDER_ACAD_NUMBER
+        Columns.MED_POLICY, Columns.GROUP,
+        Columns.ORDER_END_NUMBER, Columns.ORDER_ACAD_NUMBER
     )
 
     private val dateNullableValues: Array<Columns> = arrayOf(
-        Columns.STUD_ID_DATE, Columns.ACT_END_DATE,
+        Columns.ACT_END_DATE,
         Columns.ORDER_END_DATE, Columns.ACAD_START_DATE,
         Columns.ACAD_END_DATE, Columns.ORDER_ACAD_DATE
     )
 
     private val dateValues: Array<Columns> = arrayOf(
-        Columns.BIRTHDAY, Columns.PASSPORT_DATE,
-        Columns.ENRL_DATE, Columns.ENRL_ORDER_DATE,
-        Columns.REG_END_DATE
+        Columns.BIRTHDAY, Columns.STUD_ID_DATE,
+        Columns.PASSPORT_DATE, Columns.ENRL_DATE,
+        Columns.ENRL_ORDER_DATE, Columns.REG_END_DATE
     )
 
 
@@ -98,14 +97,14 @@ class StudentDataBuilder: IStudentDataBuilder {
         return this
     }
 
-    override fun build(row: Int): Student {
+    override fun build(row: Int, uuid: UUID): Student {
         try {
             for (i in 0..values.size-1) {
                 if (!(Columns.entries[i] in dateNullableValues || Columns.entries[i] in stringNullableValues) && values[i] == null)
                     throw RuntimeException("Неверно задано значение в столбце '${Columns.entries[i].desc}', в строке $row")
             }
             return Student(
-                uuid = UUID.randomUUID(),
+                uuid = uuid,
                 surname = values[0] as String,
                 name = values[1] as String,
                 patronymic = values[2] as String?,
@@ -125,8 +124,8 @@ class StudentDataBuilder: IStudentDataBuilder {
                 enrlDate = values[16] as Date,
                 enrlOrderDate = values[17] as Date,
                 enrlOrderNumber = values[18] as String,
-                studId = values[19] as String?,
-                studIdDate = values[20] as Date?,
+                studId = values[19] as String,
+                studIdDate = values[20] as Date,
                 group = values[21] as String?,
                 educationLevel = values[22] as String,
                 fundSrc = values[23] as String,
