@@ -9,12 +9,18 @@ export default function Header() {
     const isAuth = useUserStore((state) => state.isAuth);
     const { setUserData, setIsAuth } = useUserStore();
 
-    const destroyCookie = () => {
-        logout()
-        setUserData(null);
-        setIsAuth(false);
-        window.location.href = '/sign_in/';
+    const destroyCookie = async () => {
+        try {
+            await logout();
+        } catch (error) {
+            console.error("Ошибка при выходе:", error);
+        } finally {
+            setUserData(null);
+            setIsAuth(false);
+            window.location.href = '/sign_in/';
+        }
     };
+
 
     return (
         <header className="bg-[#2C3E50] text-white w-full px-4 py-3 shadow-md">
@@ -23,7 +29,7 @@ export default function Header() {
                     <nav className="flex items-center gap-6 text-sm">
                         <Link href="/" className="hover:underline">Главная</Link>
                         <Link href="/upload" className="hover:underline">Загрузить файл</Link>
-                        <Link href="/create_report" className="hover:underline">Создать отчет</Link>
+                        <Link href="/columns" className="hover:underline">Создать отчет</Link>
                         <Link href="/history" className="hover:underline">История отчетов</Link>
                     </nav>
                 </div>

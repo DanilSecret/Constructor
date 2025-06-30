@@ -31,7 +31,7 @@ export default function FileUploadPage() {
         const file = data.file[0];
         const result = await UploadFile(file);
         if (result.success) {
-            setMessage("Файл успешно загружен");
+            setMessage(result.message || "Файл успешно загружен");
             reset();
         } else {
             setMessage(result.message || "Ошибка при загрузке файла");
@@ -102,13 +102,13 @@ export default function FileUploadPage() {
                         >
 
                             {fileList && fileList.length > 0 ? (
-                                <div className="flex flex-col items-center justify-center">
+                                <div className="flex flex-col items-center justify-center w-[300px]">
                                     <Image src="/upload.svg" alt="upload" width={150} height={150}/>
                                     <p className="text-blue-300 text-center break-words">{fileList[0].name}</p>
                                 </div>
 
                             ) : (
-                                <div className="flex flex-col items-center justify-center">
+                                <div className="flex flex-col items-center text-center justify-center w-[300px]">
                                     <Image src="/upload.svg" alt="upload" width={150} height={150}/>
                                     <p className="text-blue-400">Перетащите файл сюда или кликните для выбора</p>
                                 </div>

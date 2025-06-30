@@ -8,7 +8,6 @@ import {LoginFormData} from "../models/models";
 
 import {useUserStore} from "@/store/store";
 import AuthUser from "@/app/Api/Api";
-// import Header from "@/app/components/header";
 
 const validationSchema = Yup.object().shape({
     email: Yup.string()
@@ -50,7 +49,6 @@ export default function Login_form() {
 
     return (
         <div className="bg-[#03062c] h-screen flex flex-col">
-            {/*<Header />*/}
             <div className="flex-1 flex justify-center items-center px-4 md:px-0">
                 <form onSubmit={handleSubmit(onSubmit)}
                       className="w-full max-w-sm p-6 rounded-lg shadow-md bg-[#101025] border border-blue-500 rounded-[10px] shadow-md flex flex-col justify-between">
