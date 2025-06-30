@@ -1,5 +1,7 @@
 package uisi.ru.constructor.controller
 
+import jakarta.servlet.http.Cookie
+import jakarta.servlet.http.HttpServletResponse
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
@@ -23,6 +25,17 @@ class UserController(
     private val userService: UserService,
     private val studentsService: StudentsService
 ) {
+    @PostMapping("/logout")
+    fun logout(@RequestBody response: HttpServletResponse): ResponseEntity<Any> {
+        val cookie = Cookie("token",null)
+        cookie.path = "/"
+        cookie.maxAge = 0
+        cookie.isHttpOnly = true
+        response.addCookie(cookie)
+
+        return ResponseEntity.ok().build()
+    }
+
     @PostMapping("/upload")
     fun uploadXlsx(file: MultipartFile): ResponseEntity<Any> {
         if (file.isEmpty) {
