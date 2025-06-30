@@ -35,11 +35,15 @@ class StudentsService(
                 if (row != null) {
                     for (j in 0..row.lastCellNum-1) {
                         val cell = row.getCell(j)?: continue
-                            cell.let {
-                                rowBuilder.parseCell(cell)
-                            }
+                        cell.let {
+                            rowBuilder.parseCell(cell)
+                        }
                     }
-                    table.add(rowBuilder.build(i+1))
+                    val studId = rowBuilder.values[19] as String
+                    val enrlOrderNumber = rowBuilder.values[18] as String
+                    val existsStudent: Student? = studentRepository.getStudentByStudIdAndEnrlOrderNumber(studId, enrlOrderNumber)
+                    val uuid = existsStudent?.uuid?: UUID.randomUUID()
+                    table.add(rowBuilder.build(i+1, uuid))
                 }
             }
 

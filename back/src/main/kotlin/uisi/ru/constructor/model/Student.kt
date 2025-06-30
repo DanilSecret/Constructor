@@ -51,10 +51,10 @@ data class Student(
     val enrlOrderDate: Date,
     @Column(name = "enrl_order_number", nullable = false, columnDefinition = "text")
     val enrlOrderNumber: String,
-    @Column(name = "stud_id", nullable = true, columnDefinition = "text")
-    val studId: String? = null,
-    @Column(name = "stud_id_date", nullable = true, columnDefinition = "date")
-    val studIdDate: Date? = null,
+    @Column(name = "stud_id", nullable = false, columnDefinition = "text")
+    val studId: String,
+    @Column(name = "stud_id_date", nullable = false, columnDefinition = "date")
+    val studIdDate: Date,
     @Column(name = "\"group\"", nullable = true, columnDefinition = "text")
     val group: String? = null,
     @Column(name = "education_level", nullable = false, columnDefinition = "text")
