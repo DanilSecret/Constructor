@@ -19,7 +19,7 @@ class UserService(
     private val passwordEncoder = BCryptPasswordEncoder()
 
     fun register(userRegister: UserRegister): ResponseEntity<Any> {
-        val user = userRepository.findByEmail(userRegister.email)?.let { return ResponseEntity.badRequest().body(ResponseMessage("Пользователь с таким email уже есть")) }
+        val user = userRepository.findByEmail(userRegister.email)?.let { return ResponseEntity.badRequest().body(ResponseMessage("Пользователь с таким email уже есть",false)) }
         try {
             val newUser = User(
                 uuid = UUID.randomUUID(),
@@ -28,10 +28,10 @@ class UserService(
                 role = Roles.valueOf(userRegister.role).toString(),
             )
             userRepository.save(newUser)
-            return ResponseEntity.ok().body(ResponseMessage("Новый пользователь успешно добавлен"))
+            return ResponseEntity.ok().body(ResponseMessage("Новый пользователь успешно добавлен",true))
         }
         catch (e: Exception) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ResponseError(e.message.toString()))
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ResponseMessage(e.message.toString(), false))
         }
     }
 
@@ -49,10 +49,10 @@ class UserService(
                 return ResponseEntity.ok().body(ResponseLogin(user))
             }
             else {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ResponseMessage("Неверный пароль"))
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ResponseMessage("Неверный пароль",false))
             }
         }
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ResponseMessage("Пользователя с email ${userLogin.email} не найдено"))
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ResponseMessage("Пользователя с email ${userLogin.email} не найдено",false))
     }
 
     fun validatePassword(password: String, user: User): Boolean {
