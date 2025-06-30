@@ -55,10 +55,13 @@ class StudentsService(
     }
 
     fun getCols(): ResponseEntity<Any> {
-        val colsRu = emptyMap<Int, String>().toMutableMap()
+        val colsRu = emptyList<Map<String, String>>().toMutableList()
         val cols = Columns.entries
         for (i in 0..cols.size-1){
-            colsRu[i] = cols[i].desc
+            val map = emptyMap<String, String>().toMutableMap()
+            map["id"] = i.toString()
+            map["name"] = cols[i].desc
+            colsRu.add(map)
         }
         return ResponseEntity.ok().body(colsRu)
     }
