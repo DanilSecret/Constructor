@@ -3,12 +3,14 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useUserStore } from "@/store/store";
+import {logout} from "@/app/Api/Api";
 
 export default function Header() {
     const isAuth = useUserStore((state) => state.isAuth);
     const { setUserData, setIsAuth } = useUserStore();
 
     const destroyCookie = () => {
+        logout()
         setUserData(null);
         setIsAuth(false);
         window.location.href = '/sign_in/';

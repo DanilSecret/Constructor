@@ -34,6 +34,12 @@ export default async function AuthUser(email: string, password: string) {
     }
 }
 
+export async function logout() {
+    await axios.delete("http://localhost:8080/api/user/logout", {
+        withCredentials: true,
+    });
+}
+
 export async function UploadFile(file: File): Promise<{ success: boolean; message?: string }> {
     const formData = new FormData();
     formData.append("file", file);
@@ -54,3 +60,4 @@ export async function UploadFile(file: File): Promise<{ success: boolean; messag
         };
     }
 }
+
