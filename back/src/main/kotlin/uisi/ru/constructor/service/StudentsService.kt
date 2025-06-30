@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
 import uisi.ru.constructor.builders.StudentDataBuilder
+import uisi.ru.constructor.model.Columns
 import uisi.ru.constructor.model.ResponseError
 import uisi.ru.constructor.model.ResponseMessage
 import uisi.ru.constructor.model.Student
@@ -51,5 +52,16 @@ class StudentsService(
             return ResponseEntity.ok().body(ResponseMessage("${table.size} записей успешно обработано"))
         }
         catch (e: Exception) { return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ResponseMessage(e.message.toString())) }
+    }
+
+    fun getCols(): ResponseEntity<Any> {
+        val colsRu = emptyList<Pair<Int, String>>().toMutableList()
+        val cols = Columns.entries
+        for (i in 0..cols.size-1){
+            colsRu.add(
+                i to cols[i].desc
+            )
+        }
+        return ResponseEntity.ok().body(colsRu)
     }
 }

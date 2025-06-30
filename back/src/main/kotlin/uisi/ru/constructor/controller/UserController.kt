@@ -36,6 +36,11 @@ class UserController(
         return ResponseEntity.ok().build()
     }
 
+    @GetMapping("getCols")
+    fun getCols(): ResponseEntity<Any> {
+        return studentsService.getCols()
+    }
+
     @PostMapping("/upload")
     fun uploadXlsx(file: MultipartFile): ResponseEntity<Any> {
         if (file.isEmpty) {
