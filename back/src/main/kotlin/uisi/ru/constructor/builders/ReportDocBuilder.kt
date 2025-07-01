@@ -1,17 +1,16 @@
 package uisi.ru.constructor.builders
 
 import jakarta.persistence.EntityManager
+import jakarta.persistence.PersistenceContext
 import org.apache.poi.xssf.usermodel.XSSFWorkbook
-import org.springframework.web.servlet.function.router
 import uisi.ru.constructor.model.Student
-import uisi.ru.constructor.repository.StudentRepository
 import java.text.SimpleDateFormat
 import java.util.Date
-import kotlin.reflect.typeOf
 
-class ReportDocBuilder(
-    private val entityManager: EntityManager
-): IReportDocBuilder {
+class ReportDocBuilder(): IReportDocBuilder {
+    @PersistenceContext
+    private lateinit var entityManager: EntityManager
+
     val report: XSSFWorkbook = XSSFWorkbook()
 
     private val formatter = SimpleDateFormat("dd.MM.yyyy")

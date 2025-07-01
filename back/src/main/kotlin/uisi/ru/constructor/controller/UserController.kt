@@ -35,7 +35,7 @@ class UserController(
         return ResponseEntity.ok().build()
     }
 
-    @GetMapping("getCols")
+    @GetMapping("/getCols")
     fun getCols(): ResponseEntity<Any> {
         return studentsService.getCols()
     }
@@ -46,6 +46,11 @@ class UserController(
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ResponseMessage("Файл пустой или отсутствует",false))
         }
         return studentsService.uploadXlsx(file.inputStream)
+    }
+
+    @GetMapping("/download")
+    fun downloadXlsx(request: HistoryRequest): ResponseEntity<Any> {
+        return studentsService.createXlsx(request)
     }
 
     @GetMapping("/dev")
