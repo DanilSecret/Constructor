@@ -2,6 +2,7 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import {Columns} from "@/app/models/models";
 
+
 type ColumnsState = {
     selectedColumns: Columns[];
     setSelectedColumns: (columns: Columns[]) => void;
@@ -15,7 +16,9 @@ export const useColumnsStore = create<ColumnsState>()(
             hydrated: false,
             selectedColumns: [],
             setSelectedColumns: (columns) => set({ selectedColumns: columns }),
+
             setHydrated: () => set({ hydrated: true }),
+
         }),
         {
             name: "columns-storage",
