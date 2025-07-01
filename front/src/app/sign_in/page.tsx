@@ -48,38 +48,47 @@ export default function Login_form() {
     };
 
     return (
-        <div className="bg-[#03062c] h-screen flex flex-col">
+        <div className="bg-[#F5F7FA] h-screen flex flex-col">
             <div className="flex-1 flex justify-center items-center px-4 md:px-0">
                 <form onSubmit={handleSubmit(onSubmit)}
-                      className="w-full max-w-sm p-6 rounded-lg shadow-md bg-[#101025] border border-blue-500 rounded-[10px] shadow-md flex flex-col justify-between">
-                    <h1 className="text-xl font-semibold text-center mb-4">Авторизация</h1>
-
-                    <label htmlFor="email" className="block text-sm font-medium text-white">
-                        Электронная почта
-                    </label>
-                    <input type="email" {...register("email")}
-                           placeholder="Электронная почта"
-                           className="bg-white mt-1 block w-full px-3 py-2 border-2 border-blue-500 rounded-lg shadow-sm focus:ring-blue-600 focus:border-blue-600 text-black"
-                    />
-                    {errors.email && <p className="text-red-600">{errors.email.message}</p>}
-
-                    <div className="mb-4">
-                        <label htmlFor="password" className="block text-sm font-medium text-white">
-                            Пароль
-                        </label>
-                        <input type="password" {...register("password")}
-                               placeholder="Пароль"
-                               className="bg-white mt-1 block w-full px-3 py-2 border-2 border-blue-500 rounded-lg shadow-sm focus:ring-blue-600 focus:border-blue-600 text-black"
-                        />
-                        {errors.password && <p className="text-red-600">{errors.password.message}</p>}
+                      className="w-full max-w-sm bg-white border border-[#D5D8DC] rounded-[10px] shadow-md overflow-hidden flex flex-col">
+                    <div className="bg-[#2C3E50] py-3 px-6 text-center">
+                        <h1 className="text-white text-xl">Авторизация</h1>
                     </div>
+                    <div className="p-7 flex flex-col gap-12">
+                        <div>
+                            <label htmlFor="email" className="block text-sm font-medium text-[#34495E]">
+                                Электронная почта
+                            </label>
+                            <input
+                                type="email"
+                                {...register("email")}
+                                placeholder="Электронная почта"
+                                className="bg-white mt-2 block w-full px-3 py-2 border border-[#323538] rounded-[10px] shadow-sm focus:ring-blue-600 focus:border-blue-600 text-black"
+                            />
+                            {errors.email && <p className="text-red-600">{errors.email.message}</p>}
+                        </div>
 
-                    <button type="submit"
-                            className="w-full bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 mt-6">
-                        Авторизироваться
-                    </button>
+                        <div className="mb-4">
+                            <label htmlFor="password" className="block text-sm font-medium text-[#34495E]">
+                                Пароль
+                            </label>
+                            <input
+                                type="password"
+                                {...register("password")}
+                                placeholder="Пароль"
+                                className="bg-white mt-2 block w-full px-3 py-2 border border-[#323538] rounded-[10px] shadow-sm focus:ring-blue-600 focus:border-blue-600 text-black"
+                            />
+                            {errors.password && <p className="text-red-600">{errors.password.message}</p>}
+                        </div>
 
-                    {message && <p className="w-full text-center text-red-600 mt-2">{message}</p>}
+                        <button type="submit"
+                                className="w-full bg-[#3498DB] text-white py-2 px-4 rounded-lg">
+                            Войти
+                        </button>
+
+                        {message && <p className="w-full text-center text-red-600 mt-2">{message}</p>}
+                    </div>
                 </form>
             </div>
         </div>
