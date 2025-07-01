@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.multipart.MultipartFile
 import uisi.ru.constructor.model.*
-import uisi.ru.constructor.service.StudentsService
+import uisi.ru.constructor.service.StudentService
 import uisi.ru.constructor.service.UserService
 import java.util.UUID
 
@@ -21,7 +21,7 @@ import java.util.UUID
 @RequestMapping("/api/user")
 class UserController(
     private val userService: UserService,
-    private val studentsService: StudentsService
+    private val studentsService: StudentService
 ) {
     @DeleteMapping("/logout")
     fun logout(response: HttpServletResponse): ResponseEntity<Any> {

@@ -13,7 +13,7 @@ import java.io.InputStream
 import java.util.UUID
 
 @Service
-class StudentsService(
+class StudentService(
     private val studentRepository: StudentRepository
 ) {
     fun uploadXlsx(file: InputStream): ResponseEntity<Any> {
