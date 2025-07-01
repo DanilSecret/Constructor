@@ -15,7 +15,7 @@ import org.springframework.web.multipart.MultipartFile
 import uisi.ru.constructor.model.*
 import uisi.ru.constructor.service.StudentsService
 import uisi.ru.constructor.service.UserService
-import java.util.*
+import java.util.UUID
 
 @Controller
 @RequestMapping("/api/user")
@@ -60,7 +60,7 @@ class UserController(
             ))
         }
         catch (e: Exception) {
-            return ResponseEntity.badRequest().body(ResponseError(e.message.toString()))
+            return ResponseEntity.badRequest().body(ResponseMessage(e.message.toString()))
         }
     }
 }

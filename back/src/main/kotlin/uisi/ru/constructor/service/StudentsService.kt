@@ -1,19 +1,16 @@
 package uisi.ru.constructor.service
 
-import org.apache.poi.ss.usermodel.DataFormatter
 import org.apache.poi.xssf.usermodel.XSSFWorkbook
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
 import uisi.ru.constructor.builders.StudentDataBuilder
 import uisi.ru.constructor.model.Columns
-import uisi.ru.constructor.model.ResponseError
 import uisi.ru.constructor.model.ResponseMessage
 import uisi.ru.constructor.model.Student
 import uisi.ru.constructor.repository.StudentRepository
 import java.io.InputStream
-import java.text.SimpleDateFormat
-import java.util.*
+import java.util.UUID
 
 @Service
 class StudentsService(
@@ -55,7 +52,9 @@ class StudentsService(
 
             return ResponseEntity.ok().body(ResponseMessage("${table.size} записей успешно обработано", true))
         }
-        catch (e: Exception) { return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ResponseMessage(e.message.toString(), false)) }
+        catch (e: Exception) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ResponseMessage(e.message.toString(), false))
+        }
     }
 
     fun getCols(): ResponseEntity<Any> {
