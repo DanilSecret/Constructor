@@ -6,7 +6,7 @@ import {handleAxiosError} from "@/app/Api/handleAxiosError";
 export default async function AuthUser(email: string, password: string) {
     try {
         const response = await axios.post("http://localhost:8080/api/auth/login", { email, password }, { withCredentials: true, timeout: 10000 });
-        const { result } = response.data;
+        const result = response.data;
         return { success: true, message: 'Успешный вход', result: result };
     } catch (err) {
         const error = err as AxiosError<{ message: string }>;
