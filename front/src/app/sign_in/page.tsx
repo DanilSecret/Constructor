@@ -36,6 +36,7 @@ export default function Login_form() {
         try {
             const {success, message, result} = await AuthUser(data.email, data.password);
             if (success) {
+
                 setIsAuth(true)
                 setUserData(result)
                 window.location.href = '/';

@@ -33,7 +33,6 @@ export default function AddFilterPage() {
             return;
         }
 
-        // Добавляем объект в массив filters
         addFilter(newFilter);
 
         router.push("/editor");

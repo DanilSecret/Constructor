@@ -18,13 +18,14 @@ interface FilterJoinState {
 
     resetAll: () => void;
     setHydrated: () => void;
+    getFilterById: (index: number) => Filter | undefined;
 
 
 }
 
 export const useFilterJoinStore = create<FilterJoinState>()(
     persist(
-        (set) => ({
+        (set, get) => ({
             filters: [],
             joins: [],
             hydrated: false,
@@ -64,6 +65,12 @@ export const useFilterJoinStore = create<FilterJoinState>()(
                 }),
 
             resetAll: () => set({ filters: [], joins: [] }),
+
+            getFilterById: (index: number) => {
+                const filters = get().filters;
+                if (index < 0 || index >= filters.length) return undefined;
+                return filters[index];
+            },
 
             setHydrated: () => set({ hydrated: true }),
 
