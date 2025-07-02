@@ -1,5 +1,6 @@
 package uisi.ru.constructor.service
 
+import jakarta.persistence.EntityManager
 import org.apache.poi.xssf.usermodel.XSSFWorkbook
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -20,7 +21,8 @@ import kotlin.math.E
 class StudentService(
     private val studentRepository: StudentRepository,
     private val userRepository: UserRepository,
-    private val historyRepository: HistoryRepository
+    private val historyRepository: HistoryRepository,
+    private val entityManager: EntityManager,
 ) {
     fun uploadXlsx(file: InputStream): ResponseEntity<Any> {
         try {
@@ -66,7 +68,7 @@ class StudentService(
     fun createXlsx(request: HistoryRequest): ResponseEntity<Any> {
         val user: User = userRepository.getUserByUuid(UUID.fromString(request.userUUID))?: return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ResponseMessage("Не найден пользователь-заказчик", false))
         try {
-            val builder: ReportDocBuilder = ReportDocBuilder()
+            val builder: ReportDocBuilder = ReportDocBuilder(entityManager)
 
             request.filter.forEach { filter ->
                 builder.addFilterGroup(request.col, filter)

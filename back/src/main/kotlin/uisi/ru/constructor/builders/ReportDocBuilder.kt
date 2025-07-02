@@ -3,13 +3,16 @@ package uisi.ru.constructor.builders
 import jakarta.persistence.EntityManager
 import jakarta.persistence.PersistenceContext
 import org.apache.poi.xssf.usermodel.XSSFWorkbook
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.stereotype.Component
 import uisi.ru.constructor.model.Student
 import java.text.SimpleDateFormat
 import java.util.Date
 
-class ReportDocBuilder(): IReportDocBuilder {
-    @PersistenceContext
-    private lateinit var entityManager: EntityManager
+@Component
+class ReportDocBuilder(
+    private val entityManager: EntityManager,
+): IReportDocBuilder {
 
     val report: XSSFWorkbook = XSSFWorkbook()
 
@@ -168,6 +171,11 @@ class ReportDocBuilder(): IReportDocBuilder {
             }
 
             sheetData.add(newMap)
+        }
+
+        joins.forEach{ joinGroup: List<String> ->
+            val title = joinGroup.joinToString("\n")
+            headers.add(title)
         }
 
         val sheet = report.createSheet("Отчёт")
