@@ -98,11 +98,26 @@ class ReportDocBuilder(): IReportDocBuilder {
         "orderAcadNumber" to "Номер приказа о предоставлении академического отпуска (при наличии)"
     )
 
-    override fun addFilterGroup(columns: List<String>, filter: Map<String, String>): IReportDocBuilder {
+    override fun addFilterGroup(columns: List<String>, filter: Map<String, String?>): IReportDocBuilder {
         val queryColumns: List<String> = columns.mapNotNull { tableColumns[it] }
-        val queryFilter: Map<String, String> = filter.mapNotNull { (key, value) ->
+        val queryFilter: Map<String, Any?> = filter.map { (key, value: String?) ->
             tableColumns[key]?: throw RuntimeException("Неверно задано название столбца: $key")
-            tableColumns[key]!! to value
+            val parsedValue = when (value?.toLowerCase()?.trim()) {
+                "да" -> true
+                "нет" -> false
+                "true" -> true
+                "false" -> false
+                else -> {
+                    formatter.isLenient = false
+                    try {
+                        formatter.format(value?.trim())
+                    }
+                    catch (e: Exception){
+                        value?.trim()
+                    }
+                }
+            }
+            tableColumns[key]!! to parsedValue
         }.toMap()
 
         val cb = entityManager.criteriaBuilder
