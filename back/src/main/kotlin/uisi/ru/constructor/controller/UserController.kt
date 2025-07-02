@@ -45,18 +45,18 @@ class UserController(
     }
 
     @PostMapping("/selfHistory")
-    fun getHistiry(@RequestBody userUUID: String): ResponseEntity<Any> {
-        return historyService.getSelfHistory(UUID.fromString(userUUID))
+    fun getHistiry(@RequestBody request: SelfHistoryRequest): ResponseEntity<Any> {
+        return historyService.getSelfHistory(UUID.fromString(request.uuid))
     }
 
     @PostMapping("/listStudents")
 //    fun getStudents(@RequestBody filter: List<Map<String, String?>>?): ResponseEntity<Any> {
-    fun getStudents(@RequestBody filter: String?): ResponseEntity<Any> {
+    fun getStudents(@RequestBody filter: ListStudentsRequest): ResponseEntity<Any> {
         val filterMap: List<Map<String, String?>> = listOf(
-            mapOf("Фамилия" to filter),
-            mapOf("Имя" to filter),
-            mapOf("Отчество (при наличии)" to filter),
-            mapOf("Группа (при наличии)" to filter))
+            mapOf("Фамилия" to filter.search),
+            mapOf("Имя" to filter.search),
+            mapOf("Отчество (при наличии)" to filter.search),
+            mapOf("Группа (при наличии)" to filter.search))
         return studentsService.getStudents(filterMap)
     }
 
