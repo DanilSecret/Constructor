@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Controller
+import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.PutMapping
@@ -103,38 +104,7 @@ class UserController(
         )
         val formatter = SimpleDateFormat("dd.MM.yyyy")
 
-        val studentMap = rawStudentUpdate.mapNotNull { (key, value) ->
-            val parsedKey = tableColumns[key]?: return ResponseEntity.badRequest().body(ResponseMessage(
-                "Не найдено ни 1 столбца соответствующего описанию $key", false
-            ))
-
-            if ((parsedKey == "studId" || parsedKey == "enrlOrderNumber") && value?.trim().isNullOrBlank()) {
-                return ResponseEntity.badRequest().body(ResponseMessage("Поля 'Номер студенческого билета' и 'Номер приказа о зачислении' обязательны"))
-            }
-
-            val parsedValue = when (value?.toLowerCase()?.trim()) {
-                "да" -> true
-                "нет" -> false
-                "true" -> true
-                "false" -> false
-                else -> {
-                    formatter.isLenient = false
-                    try {
-                        formatter.parse(value?.trim())
-                    }
-                    catch (e: Exception){
-                        if (parsedKey == "course") {
-                            value?.trim()?.toInt()?.toShort()
-                        }
-                        else if (parsedKey == "duration") {
-                            value?.trim()?.toInt()
-                        }
-                        else value?.trim()
-                    }
-                }
-            }
-            parsedKey to parsedValue
-        }.toMap()
+        val studentMap = studentsService.parseMap(rawStudentUpdate)
 
         if (!(studentMap.containsKey("studId")&&studentMap.containsKey("enrlOrderNumber"))) {
             return ResponseEntity.badRequest().body(ResponseMessage("Поля 'Номер студенческого билета' и 'Номер приказа о зачислении' обязательны"))
@@ -144,6 +114,23 @@ class UserController(
         try{
             val studentUpdate: StudentUpdate = mapper.convertValue(studentMap, StudentUpdate::class.java)
             return studentsService.updateStudent(studentUpdate)
+        }
+        catch (e: Exception) {
+            return ResponseEntity.internalServerError().body(ResponseMessage(e.message.toString(),false))
+        }
+    }
+
+    @DeleteMapping("/delete")
+    fun deleteStudent(@RequestBody rawStudent: Map<String, String?>): ResponseEntity<Any> {
+        val student = studentsService.parseMap(rawStudent)
+        if (!(student.containsKey("studId")&&student.containsKey("enrlOrderNumber"))) {
+            return ResponseEntity.badRequest().body(ResponseMessage("Поля 'Номер студенческого билета' и 'Номер приказа о зачислении' обязательны"))
+        }
+
+        val mapper = ObjectMapper()
+        try{
+            val studentDelete: StudentUpdate = mapper.convertValue(student, StudentUpdate::class.java)
+            return studentsService.updateStudent(studentDelete)
         }
         catch (e: Exception) {
             return ResponseEntity.internalServerError().body(ResponseMessage(e.message.toString(),false))
