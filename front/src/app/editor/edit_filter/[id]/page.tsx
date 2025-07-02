@@ -5,32 +5,39 @@ import { useRouter } from "next/navigation";
 import { useColumnsStore } from "@/store/columns_store";
 import { useFilterJoinStore } from "@/store/filter_joins_store";
 import { useParams } from "next/navigation";
+import {useUserStore} from "@/store/store";
 
 export default function EditFilter() {
     const router = useRouter();
     const params = useParams();
-
     const filterId = params?.id ? Number(params.id) : null;
-
     const selectedColumns = useColumnsStore((state) => state.selectedColumns);
-
     const getFilterById = useFilterJoinStore((state) => state.getFilterById);
     const updateFilter = useFilterJoinStore((state) => state.updateFilter);
-
+    const isAuth = useUserStore((state) => state.isAuth);
+    const hydrated = useUserStore((state) => state.hydrated);
+    const hydratedFil = useFilterJoinStore((state) => state.hydrated);
+    const hydratedCol = useColumnsStore((state) => state.hydrated);
     const [filtersInput, setFiltersInput] = useState<Record<string, string>>({});
 
     useEffect(() => {
-        if (filterId === null) return;
+        if (!hydrated || !hydratedFil || !hydratedCol) return;
+        if (!isAuth) {
+            router.push("/sign_in/");
+        } else {
+            if (filterId === null) return;
 
-        const filter = getFilterById(filterId);
-        if (filter) {
-            const initialInputs: Record<string, string> = {};
-            Object.entries(filter).forEach(([key, value]) => {
-                initialInputs[key] = String(value);
-            });
-            setFiltersInput(initialInputs);
+            const filter = getFilterById(filterId);
+            if (filter) {
+                const initialInputs: Record<string, string> = {};
+                Object.entries(filter).forEach(([key, value]) => {
+                    initialInputs[key] = String(value);
+                });
+                setFiltersInput(initialInputs);
+            }
         }
-    }, [filterId, getFilterById]);
+        
+    }, [filterId, getFilterById, hydrated, hydratedCol, hydratedFil, isAuth, router]);
 
     function handleInputChange(columnName: string, value: string) {
         setFiltersInput((prev) => ({ ...prev, [columnName]: value }));

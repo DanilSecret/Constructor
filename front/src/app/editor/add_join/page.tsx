@@ -1,14 +1,19 @@
 "use client";
 
-import { useState } from "react";
+import {useEffect, useState} from "react";
 import { useRouter } from "next/navigation";
 import { useColumnsStore } from "@/store/columns_store";
 import { useFilterJoinStore } from "@/store/filter_joins_store";
+import {useUserStore} from "@/store/store";
 
 export default function AddJoinPage() {
     const router = useRouter();
     const selectedColumns = useColumnsStore((state) => state.selectedColumns);
     const addJoin = useFilterJoinStore((state) => state.addJoin);
+    const isAuth = useUserStore((state) => state.isAuth);
+    const hydrated = useUserStore((state) => state.hydrated);
+    const hydratedFil = useFilterJoinStore((state) => state.hydrated);
+    const hydratedCol = useColumnsStore((state) => state.hydrated);
 
     const [checkedColumns, setCheckedColumns] = useState<Record<string, boolean>>({});
 
@@ -33,6 +38,12 @@ export default function AddJoinPage() {
         addJoin(selected);
         router.push("/editor");
     }
+    useEffect(() => {
+        if (!hydrated || !hydratedFil || !hydratedCol) return;
+        if (!isAuth) {
+            router.push("/sign_in/");
+        }
+    },[hydrated, hydratedCol, hydratedFil, isAuth, router])
 
     return (
         <div className="max-w-3xl mx-auto p-6 bg-white text-black rounded shadow-md">

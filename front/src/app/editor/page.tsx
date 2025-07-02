@@ -4,6 +4,8 @@ import Link from "next/link";
 import {useFilterJoinStore} from "@/store/filter_joins_store";
 import Header from "@/app/components/Header";
 import {useRouter} from "next/navigation";
+import {useEffect} from "react";
+import {useUserStore} from "@/store/store";
 
 
 export default function ReportEditor() {
@@ -13,8 +15,18 @@ export default function ReportEditor() {
         removeFilter,
         removeJoin,
         resetAll,
+        hydrated
     } = useFilterJoinStore();
+    const isAuth = useUserStore((state) => state.isAuth);
     const router = useRouter();
+
+    useEffect(() => {
+        if (!hydrated) return;
+
+        if (!isAuth) {
+            router.push('/sign_in/');
+        }
+    }, [isAuth, hydrated, router]);
 
     const handleConfirm = () => {
         router.push("/editor/download/");
@@ -61,9 +73,17 @@ export default function ReportEditor() {
                             <ul className="space-y-3">
                                 {filters.map((filter, idx) => (
                                     <li key={idx} className="border p-3 rounded bg-gray-100 relative">
-                                        <pre className="whitespace-pre-wrap text-sm">{JSON.stringify(filter, null, 2)}</pre>
+                                        <div className="text-sm space-y-1">
+                                            {Object.entries(filter).map(([key, value]) => (
+                                                <div key={key}>
+                                                    <span className="font-medium">{key}:</span> {value ||
+                                                    <span className="text-gray-400 italic">пусто</span>}
+                                                </div>
+                                            ))}
+                                        </div>
                                         <div className="absolute top-1 right-1 flex gap-2">
-                                            <Link href={`/editor/edit_filter/${idx}`} className="text-blue-600 hover:text-blue-800 font-bold select-none">
+                                            <Link href={`/editor/edit_filter/${idx}`}
+                                                  className="text-blue-600 hover:text-blue-800 font-bold select-none">
                                                 ✎
                                             </Link>
                                             <button
@@ -85,7 +105,13 @@ export default function ReportEditor() {
                             <ul className="space-y-3">
                                 {joins.map((joinGroup, idx) => (
                                     <li key={idx} className="border p-3 rounded bg-gray-100 relative">
-                                        <pre className="whitespace-pre-wrap text-sm">{JSON.stringify(joinGroup, null, 2)}</pre>
+                                        <div className="text-sm flex gap-2">
+                                            <div className="text-sm">
+                                                {Object.values(joinGroup).filter(Boolean).join(" + ")}
+                                            </div>
+
+                                        </div>
+
                                         <div className="absolute top-1 right-1 flex gap-2">
                                             <button
                                                 onClick={() => removeJoin(idx)}
@@ -102,7 +128,7 @@ export default function ReportEditor() {
 
                     {/* Правая панель управления */}
                     <div className="w-52 flex flex-col gap-3">
-                        <Link
+                    <Link
                             href="/editor/add_filter"
                             className="text-center bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded block"
                         >
