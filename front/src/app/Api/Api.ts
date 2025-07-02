@@ -2,6 +2,7 @@
 import axios, { AxiosError } from "axios";
 import {Columns} from "@/app/models/models";
 import {handleAxiosError} from "@/app/Api/handleAxiosError";
+import {Filter} from "@/store/filter_joins_store";
 
 export default async function AuthUser(email: string, password: string) {
     try {
@@ -72,4 +73,13 @@ export async function GetAllColumns(): Promise<{ success: boolean; message?: str
     }catch (err) {
         return handleAxiosError(err, "получении колонок");
     }
+}
+
+export async function downloadExcel(userUUID:string, col: Columns[], filter: Filter[], joins: string[][]): Promise<Blob> {
+    const response = await axios.post(
+        "",
+        { userUUID, col, filter, joins },
+        { responseType: "blob" }
+    );
+    return response.data;
 }

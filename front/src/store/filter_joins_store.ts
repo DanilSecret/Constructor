@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
-type Filter = Record<string, string | number>;
+export type Filter = Record<string, string | number>;
 type JoinGroup = string[][];
 
 interface FilterJoinState {

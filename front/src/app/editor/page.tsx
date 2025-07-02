@@ -1,9 +1,10 @@
 "use client";
 
-import React from "react";
 import Link from "next/link";
 import {useFilterJoinStore} from "@/store/filter_joins_store";
 import Header from "@/app/components/Header";
+import {useRouter} from "next/navigation";
+
 
 export default function ReportEditor() {
     const {
@@ -13,10 +14,10 @@ export default function ReportEditor() {
         removeJoin,
         resetAll,
     } = useFilterJoinStore();
+    const router = useRouter();
 
     const handleConfirm = () => {
-        console.log("Фильтры:", filters);
-        console.log("Соединения:", joins);
+        router.push("/editor/download/");
     };
 
     return (
