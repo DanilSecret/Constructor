@@ -48,7 +48,7 @@ class UserController(
         return studentsService.uploadXlsx(file.inputStream)
     }
 
-    @GetMapping("/download")
+    @PostMapping("/download")
     fun downloadXlsx(request: HistoryRequest): ResponseEntity<Any> {
         return studentsService.createXlsx(request)
     }
