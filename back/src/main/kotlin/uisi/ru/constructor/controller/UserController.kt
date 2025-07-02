@@ -45,7 +45,7 @@ class UserController(
     }
 
     @PostMapping("/selfHistory")
-    fun getHistiry(@RequestBody request: SelfHistoryRequest): ResponseEntity<Any> {
+    fun getHistory(@RequestBody request: SelfHistoryRequest): ResponseEntity<Any> {
         return historyService.getSelfHistory(UUID.fromString(request.uuid))
     }
 
