@@ -83,3 +83,26 @@ export async function downloadExcel(userUUID:string, col: string[], filter: Filt
     );
     return response.data;
 }
+
+export async function ReportsHistory(uuid: string | undefined) {
+    if (!uuid) {
+        return {
+            success: false,
+            message: 'UUID пользователя не определён',
+            data: [],
+        };
+    }
+    try {
+        const response = await axios.post(
+            "http://localhost:8080/api/user/selfHistory",
+            { uuid },
+            { withCredentials: true }
+        );
+        return {
+            success: true,
+            data: response.data,
+        };
+    } catch (err) {
+        return handleAxiosError(err, "получении истории");
+    }
+}

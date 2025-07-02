@@ -11,7 +11,7 @@ export function handleAxiosError(err: unknown, context: string = "ошибке")
                 break;
             case 403:
                 message = "Доступ запрещён";
-                window.location.href = "/sign_in/";
+                //window.location.href = "/sign_in/";
                 break;
             case 500:
                 message = "Ошибка сервера, попробуйте позже";
