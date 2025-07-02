@@ -23,18 +23,6 @@ class UserController(
     private val userService: UserService,
     private val studentsService: StudentService
 ) {
-    @DeleteMapping("/logout")
-    fun logout(response: HttpServletResponse): ResponseEntity<Any> {
-        val cookie = Cookie("token",null).apply {
-            isHttpOnly = true;
-            path = "/"
-            maxAge = 0
-        }
-        response.addCookie(cookie)
-
-        return ResponseEntity.ok().build()
-    }
-
     @GetMapping("/getCols")
     fun getCols(): ResponseEntity<Any> {
         return studentsService.getCols()
