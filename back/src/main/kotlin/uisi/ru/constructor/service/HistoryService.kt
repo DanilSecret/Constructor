@@ -8,7 +8,6 @@ import uisi.ru.constructor.model.HistoryResponse
 import uisi.ru.constructor.model.ResponseMessage
 import uisi.ru.constructor.repository.HistoryRepository
 import uisi.ru.constructor.repository.UserRepository
-import java.text.SimpleDateFormat
 import java.util.UUID
 
 @Service

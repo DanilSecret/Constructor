@@ -7,6 +7,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
+import org.springframework.web.bind.annotation.DeleteMapping
 import uisi.ru.constructor.builders.ReportDocBuilder
 import uisi.ru.constructor.builders.StudentDataBuilder
 import uisi.ru.constructor.model.*
@@ -28,6 +29,80 @@ class StudentService(
     private val historyRepository: HistoryRepository,
     private val entityManager: EntityManager,
 ) {
+    private val tableColumns: Map<String, String> = mapOf(
+        "Фамилия" to "surname",
+        "Имя" to "name",
+        "Отчество (при наличии)" to "patronymic",
+        "Пол" to "gender",
+        "Дата рождения" to "birthday",
+        "Номер телефона (при наличии)" to "phone",
+        "Адрес местожительства по прописке" to "regAddr",
+        "Адрес места жительства (фактический)" to "actAddr",
+        "Серия паспорта (при наличии)" to "passportSerial",
+        "Номер паспорта" to "passportNumber",
+        "Дата выдачи паспорта" to "passportDate",
+        "Кем выдан паспорт" to "passportSource",
+        "СНИЛС (при наличии)" to "snils",
+        "Номер медицинского полиса (при наличии)" to "medPolicy",
+        "Иностранный гражданин" to "foreigner",
+        "Особая квота (инвалид сирота)" to "quota",
+        "Дата зачисления в образовательную организацию" to "enrlDate",
+        "Дата приказа о зачислении" to "enrlOrderDate",
+        "Номер приказа о зачислении" to "enrlOrderNumber",
+        "Номер студенческого билета" to "studId",
+        "Дата выдачи студенческого билета" to "studIdDate",
+        "Группа (при наличии)" to "group",
+        "Наименование уровня образования" to "educationLevel",
+        "Источник финансирования" to "fundSrc",
+        "Номер курса" to "course",
+        "Форма обучения" to "studyForm",
+        "Наименование направления" to "program",
+        "Код направления" to "programCode",
+        "Наименование образовательной программы (Профиль)" to "profile",
+        "Срок реализации образовательной программы (кол-во месяцев)" to "duration",
+        "Планируемая дата окончания обучения" to "regEndDate",
+        "Дата завершения обучения или отчисления (при наличии)" to "actEndDate",
+        "Дата приказа о завершении обучения или отчислении (при наличии)" to "orderEndDate",
+        "Номер приказа о завершении обучения или отчислении (при наличии)" to "orderEndNumber",
+        "Дата начала академического отпуска (при наличии)" to "acadStartDate",
+        "Дата окончания академического отпуска (при наличии)" to "acadEndDate",
+        "Дата приказа о предоставлении академического отпуска (при наличии)" to "orderAcadDate",
+        "Номер приказа о предоставлении академического отпуска (при наличии)" to "orderAcadNumber"
+    )
+    private val formatter = SimpleDateFormat("dd.MM.yyyy")
+
+    fun parseMap(rawData: Map<String, String?>): Map<String, Any?> {
+        val studentMap = rawData.mapNotNull { (key, value) ->
+            val parsedKey = tableColumns[key]?: throw RuntimeException(
+                "Не найдено ни 1 столбца соответствующего описанию $key")
+
+            val parsedValue = when (value?.toLowerCase()?.trim()) {
+                "да" -> true
+                "нет" -> false
+                "true" -> true
+                "false" -> false
+                else -> {
+                    formatter.isLenient = false
+                    try {
+                        formatter.parse(value?.trim())
+                    }
+                    catch (e: Exception){
+                        if (parsedKey == "course") {
+                            value?.trim()?.toInt()?.toShort()
+                        }
+                        else if (parsedKey == "duration") {
+                            value?.trim()?.toInt()
+                        }
+                        else value?.trim()
+                    }
+                }
+            }
+            parsedKey to parsedValue
+        }.toMap()
+
+        return studentMap
+    }
+
     fun uploadXlsx(file: InputStream): ResponseEntity<Any> {
         try {
             val workbook = XSSFWorkbook(file)
@@ -100,7 +175,7 @@ class StudentService(
             val file = baos.toByteArray()
 
             return ResponseEntity.ok()
-                .header("Content-Disposition", "attachment; filename=отчет.xlsx")
+                .header("Content-Disposition")
                 .body(file)
         }
         catch (e: RuntimeException) {
@@ -122,7 +197,6 @@ class StudentService(
     fun getStudents(filter: List<Map<String, String?>>?):ResponseEntity<Any> {
         val cols: List<String> = Columns.entries.mapNotNull { it.desc }
         val builder = ReportDocBuilder(entityManager)
-        val students = emptyList<Map<String, String?>>().toMutableList()
         if (filter == null) {
             val tableColumnsRev: Map<String, String> = mapOf(
                 "surname" to "Фамилия",
@@ -166,12 +240,12 @@ class StudentService(
             )
 
             val mapper = ObjectMapper()
-            val students = studentRepository.findAll().mapNotNull { student: Student ->
+            val rawStudents = studentRepository.findAll().mapNotNull { student: Student ->
                 mapper.convertValue(student, Map::class.java) as Map<String, Any?>
             }
             val formatter = SimpleDateFormat("dd.MM.yyyy")
-            students.mapNotNull { student: Map<String, Any?> ->
-                student.map{ (key, value) ->
+            val students = rawStudents.mapNotNull { student: Map<String, Any?> ->
+                student.filterKeys { it != "uuid" }.map{ (key, value) ->
                     val newKey = tableColumnsRev[key]?: return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ResponseMessage("Ошибка при получении данных:\nСтолбцу $key не соответствует ни 1 описание", false))
                     val stringValue = when (value) {
                         is Date -> formatter.format(value)
@@ -191,6 +265,74 @@ class StudentService(
             return ResponseEntity.ok().body(students)
         }
         return  ResponseEntity.internalServerError().body(ResponseMessage("Не удалось обработать фильтры", false))
+    }
 
+    fun updateStudent(studentUpdate: StudentUpdate): ResponseEntity<Any> {
+        val exists = studentRepository.getStudentByStudIdAndEnrlOrderNumber(studentUpdate.studId?: throw RuntimeException("Поле 'Номер студенческого билета' обязательно"),
+            studentUpdate.enrlOrderNumber?: throw RuntimeException("Поле 'Номер приказа о зачислении' обязательно"))?:
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ResponseMessage("Студента не найдено", false))
+
+        val upd = exists.copy(
+            uuid = exists.uuid,
+            surname = studentUpdate.surname?: exists.surname,
+            name = studentUpdate.name?: exists.name,
+            patronymic = studentUpdate.patronymic ?: exists.patronymic,
+            gender = studentUpdate.gender ?: exists.gender,
+            birthday = studentUpdate.birthday ?: exists.birthday,
+            phone = studentUpdate.phone ?: exists.phone,
+            regAddr = studentUpdate.regAddr ?: exists.regAddr,
+            actAddr = studentUpdate.actAddr ?: exists.actAddr,
+            passportSerial = studentUpdate.passportSerial ?: exists.passportSerial,
+            passportNumber = studentUpdate.passportNumber ?: exists.passportNumber,
+            passportDate = studentUpdate.passportDate ?: exists.passportDate,
+            passportSource = studentUpdate.passportSource ?: exists.passportSource,
+            snils = studentUpdate.snils ?: exists.snils,
+            medPolicy = studentUpdate.medPolicy ?: exists.medPolicy,
+            foreigner = studentUpdate.foreigner ?: exists.foreigner,
+            quota = studentUpdate.quota ?: exists.quota,
+            enrlDate = studentUpdate.enrlDate ?: exists.enrlDate,
+            enrlOrderDate = studentUpdate.enrlOrderDate ?: exists.enrlOrderDate,
+            enrlOrderNumber = studentUpdate.enrlOrderNumber,
+            studId = studentUpdate.studId,
+            studIdDate = studentUpdate.studIdDate ?: exists.studIdDate,
+            group = studentUpdate.group ?: exists.group,
+            educationLevel = studentUpdate.educationLevel ?: exists.educationLevel,
+            fundSrc = studentUpdate.fundSrc ?: exists.fundSrc,
+            course = studentUpdate.course ?: exists.course,
+            studyForm = studentUpdate.studyForm ?: exists.studyForm,
+            program = studentUpdate.program ?: exists.program,
+            programCode = studentUpdate.programCode ?: exists.programCode,
+            profile = studentUpdate.profile ?: exists.profile,
+            duration = studentUpdate.duration ?: exists.duration,
+            regEndDate = studentUpdate.regEndDate ?: exists.regEndDate,
+            actEndDate = studentUpdate.actEndDate ?: exists.actEndDate,
+            orderEndDate = studentUpdate.orderEndDate ?: exists.orderEndDate,
+            orderEndNumber = studentUpdate.orderEndNumber ?: exists.orderEndNumber,
+            acadStartDate = studentUpdate.acadStartDate ?: exists.acadStartDate,
+            acadEndDate = studentUpdate.acadEndDate ?: exists.acadEndDate,
+            orderAcadDate = studentUpdate.orderAcadDate ?: exists.orderAcadDate,
+            orderAcadNumber = studentUpdate.orderAcadNumber ?: exists.orderAcadNumber
+        )
+
+        studentRepository.save(upd)
+
+        return ResponseEntity.ok().body(ResponseMessage("Данные успешно обновлены", true))
+    }
+
+    fun deleteStudent(studentDelete: StudentUpdate): ResponseEntity<Any> {
+        val student = studentRepository.getStudentByStudIdAndEnrlOrderNumber(
+            studentDelete.studId?: throw RuntimeException("Поле 'Номер студенческого билета' обязательно"),
+            studentDelete.enrlOrderNumber?: throw RuntimeException("Поле 'Номер приказа о зачислении' обязательно"))?:
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ResponseMessage("Студента не найдено", false))
+
+        student.let {
+            try {
+                studentRepository.delete(student)
+
+                return ResponseEntity.ok().body(ResponseMessage("Данные о студенте успешно удалены", true))
+            }
+            catch (e: Exception) {
+                return ResponseEntity.internalServerError().body(ResponseMessage(e.message.toString(),false))}
+        }
     }
 }
