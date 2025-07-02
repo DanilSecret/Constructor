@@ -100,7 +100,7 @@ class StudentService(
             val file = baos.toByteArray()
 
             return ResponseEntity.ok()
-                .header("Content-Disposition", "attachment; filename=отчет.xlsx")
+                .header("Content-Disposition")
                 .body(file)
         }
         catch (e: RuntimeException) {
@@ -122,7 +122,6 @@ class StudentService(
     fun getStudents(filter: List<Map<String, String?>>?):ResponseEntity<Any> {
         val cols: List<String> = Columns.entries.mapNotNull { it.desc }
         val builder = ReportDocBuilder(entityManager)
-        val students = emptyList<Map<String, String?>>().toMutableList()
         if (filter == null) {
             val tableColumnsRev: Map<String, String> = mapOf(
                 "surname" to "Фамилия",
@@ -166,12 +165,12 @@ class StudentService(
             )
 
             val mapper = ObjectMapper()
-            val students = studentRepository.findAll().mapNotNull { student: Student ->
+            val rawStudents = studentRepository.findAll().mapNotNull { student: Student ->
                 mapper.convertValue(student, Map::class.java) as Map<String, Any?>
             }
             val formatter = SimpleDateFormat("dd.MM.yyyy")
-            students.mapNotNull { student: Map<String, Any?> ->
-                student.map{ (key, value) ->
+            val students = rawStudents.mapNotNull { student: Map<String, Any?> ->
+                student.filterKeys { it != "uuid" }.map{ (key, value) ->
                     val newKey = tableColumnsRev[key]?: return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ResponseMessage("Ошибка при получении данных:\nСтолбцу $key не соответствует ни 1 описание", false))
                     val stringValue = when (value) {
                         is Date -> formatter.format(value)
@@ -191,6 +190,5 @@ class StudentService(
             return ResponseEntity.ok().body(students)
         }
         return  ResponseEntity.internalServerError().body(ResponseMessage("Не удалось обработать фильтры", false))
-
     }
 }

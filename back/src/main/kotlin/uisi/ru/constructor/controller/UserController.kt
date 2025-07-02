@@ -46,7 +46,13 @@ class UserController(
     }
 
     @PostMapping("/listStudents")
-    fun getStudents(@RequestBody filter: List<Map<String, String?>>?): ResponseEntity<Any> {
-        return studentsService.getStudents(filter)
+//    fun getStudents(@RequestBody filter: List<Map<String, String?>>?): ResponseEntity<Any> {
+    fun getStudents(@RequestBody filter: String?): ResponseEntity<Any> {
+        val filterMap: List<Map<String, String?>> = listOf(
+            mapOf("Фамилия" to filter),
+            mapOf("Имя" to filter),
+            mapOf("Отчество (при наличии)" to filter),
+            mapOf("Группа (при наличии)" to filter))
+        return studentsService.getStudents(filterMap)
     }
 }

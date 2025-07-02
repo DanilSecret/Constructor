@@ -130,7 +130,7 @@ class ReportDocBuilder(
         val selections = queryColumns.map { root.get<Any>(it).alias(it) }
         cq.multiselect(selections)
 
-        val predicates = queryFilter.map { (column, value) ->
+        val predicates = queryFilter.mapNotNull { (column, value) ->
             root.get<String>(column)?.let { cb.equal(it, value) }
         }
         cq.where(*predicates.toTypedArray())
@@ -146,7 +146,7 @@ class ReportDocBuilder(
                     }
                     newKey to stringValue
                 }.toMap()
-                data.add(newMap)
+                if (!data.contains(newMap)) data.add(newMap)
             }
 
         return this
@@ -174,7 +174,7 @@ class ReportDocBuilder(
         }
 
         joins.forEach{ joinGroup: List<String> ->
-            val title = joinGroup.joinToString("\n")
+            val title = joinGroup.joinToString(" ")
             headers.add(title)
         }
 
