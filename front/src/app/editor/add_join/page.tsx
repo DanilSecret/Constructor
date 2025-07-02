@@ -46,9 +46,9 @@ export default function AddJoinPage() {
     },[hydrated, hydratedCol, hydratedFil, isAuth, router])
 
     return (
-        <div className="max-w-3xl mx-auto p-6 bg-white text-black rounded shadow-md">
-            <h2 className="text-xl font-semibold mb-6">Добавить соединение</h2>
-
+        <div className="min-h-screen bg-[#f6f8fb] flex flex-col items-center justify-center">
+            <div className="bg-white rounded-lg shadow p-5 w-full max-w-3xl my-20 border border-[#D5D8DC] text-black">
+            <h2 className="text-xl mb-6 text-center">Добавить соединение</h2>
             <div className="flex flex-col gap-4">
                 {selectedColumns.map((col) => (
                     <label key={col.id} className="flex items-center gap-3">
@@ -64,7 +64,7 @@ export default function AddJoinPage() {
                 ))}
             </div>
 
-            <div className="mt-8 flex justify-end gap-4">
+            <div className="mt-8 flex justify-center gap-4">
                 <button
                     type="button"
                     onClick={() => router.push("/editor")}
@@ -76,10 +76,11 @@ export default function AddJoinPage() {
                 <button
                     type="button"
                     onClick={handleSave}
-                    className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+                    className="px-4 py-2 bg-[#3498DB] hover:bg-[#2F89C5] transition text-white rounded"
                 >
                     Сохранить соединение
                 </button>
+            </div>
             </div>
         </div>
     );
