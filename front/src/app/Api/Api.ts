@@ -76,10 +76,6 @@ export async function GetAllColumns(): Promise<{ success: boolean; message?: str
 }
 
 export async function downloadExcel(userUUID:string, col: string[], filter: Filter[], joins: string[][]): Promise<Blob> {
-    console.log("UUID пользователя: ",userUUID)
-    console.log("Столбцы: ",col)
-    console.log("Фильтры: ",filter)
-    console.log("Соединения: ",joins)
     const response = await axios.post(
         "http://localhost:8080/api/user/download",
         { userUUID, col, filter, joins },

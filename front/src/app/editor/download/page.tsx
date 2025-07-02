@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import {useEffect, useRef, useState} from "react";
 import {useFilterJoinStore} from "@/store/filter_joins_store";
 import { useColumnsStore } from "@/store/columns_store";
 import {useUserStore} from "@/store/store";
@@ -20,43 +20,43 @@ export default function WaitingPage() {
     const hydratedFil = useFilterJoinStore((state) => state.hydrated);
     const hydratedCol = useColumnsStore((state) => state.hydrated);
     const router = useRouter();
+    const hasRun = useRef(false);
 
     useEffect(() => {
         if (!hydrated || !hydratedFil || !hydratedCol) return;
         if (!isAuth) {
             router.push("/sign_in/");
-        } else {
-            const PostAndDownload = async () => {
-                if (!userUUID) {
-                    console.error("UUID пользователя не найден");
-                    setLoading(false);
-                    return;
-                }
-                try {
-                    const columnNames = col.map((c) => c.name);
-
-                    const blob = await downloadExcel(userUUID, columnNames, filter, joins);
-
-                    const url = window.URL.createObjectURL(blob);
-                    const a = document.createElement("a");
-                    a.href = url;
-                    a.download = "отчет.xlsx";
-                    document.body.appendChild(a);
-                    a.click();
-                    document.body.removeChild(a);
-                    window.URL.revokeObjectURL(url);
-                } catch (error) {
-                    handleAxiosError(error, "формировании отчета");
-                    console.error("Ошибка при скачивании файла:", error);
-                } finally {
-                    setLoading(false);
-                }
-            };
-
-            PostAndDownload();
+            return;
         }
-    }, [userUUID, col, filter, joins, hydrated, hydratedCol, hydratedFil, isAuth, router]);
+        if (hasRun.current) return; // 👈 блокировка повтора
+        hasRun.current = true;
 
+        const PostAndDownload = async () => {
+            if (!userUUID) {
+                console.error("UUID пользователя не найден");
+                setLoading(false);
+                return;
+            }
+            try {
+                const columnNames = col.map((c) => c.name);
+                const blob = await downloadExcel(userUUID, columnNames, filter, joins);
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement("a");
+                a.href = url;
+                a.download = "отчет.xlsx";
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                window.URL.revokeObjectURL(url);
+            } catch (error) {
+                handleAxiosError(error, "формировании отчета");
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        PostAndDownload();
+    }, [userUUID, col, filter, joins, hydrated, hydratedCol, hydratedFil, isAuth, router]);
     return (
         <div>
             <Header/>
