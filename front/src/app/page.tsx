@@ -59,25 +59,28 @@ export default function HomePage() {
     return (
         <div>
             <Header/>
-            <main className="min-h-screen bg-gray-50 px-4 py-10 flex flex-col items-center">
-                <h1 className="text-4xl font-bold text-black text-center mb-4">Система формирования отчётов</h1>
-                <p className="text-black text-center max-w-xl mb-10">
+            <main className="min-h-screen bg-[#F5F7FA] px-4 py-10 flex flex-col items-center">
+                <h1 className="text-4xl font-bold text-[#34495E] text-center mb-4">Система формирования отчётов</h1>
+                <p className="text-[#34495E] text-center max-w-xl mb-10">
                     Здесь вы можете загрузить файл с данными, выбрать нужные колонки и получить готовый отчёт.
                 </p>
 
                 {/* Слайдер */}
                 <div className="relative w-full max-w-4xl overflow-hidden mb-10">
-                    <div className="flex gap-4 overflow-x-auto scrollbar-hide px-1" ref={sliderRef}>
+                    <div
+                        className="flex gap-6 overflow-x-auto scrollbar-hide px-1 justify-center"
+                        ref={sliderRef}
+                    >
                         {cards.map((card, idx) => (
                             <div
                                 key={idx}
-                                className="min-w-[280px] md:min-w-[320px] bg-white shadow-md rounded-xl p-6 flex-shrink-0"
+                                className="w-[250px] md:min-w-[250px] bg-white shadow-md rounded-xl p-4 flex-shrink-0 border border-[#D5D8DC] relative pb-14"
                             >
-                                <h2 className="text-xl font-semibold text-black mb-2">{card.title}</h2>
-                                <p className="text-black mb-4">{card.description}</p>
+                                <h2 className="text-xl font-semibold text-[#34495E] mb-2">{card.title}</h2>
+                                <p className="text-[#34495E] mb-3  text-center">{card.description}</p>
                                 <button
                                     onClick={() => router.push(card.route)}
-                                    className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md transition"
+                                    className="bg-[#3498DB] hover:bg-[#2F89C5] text-white px-4 py-2 rounded-md transition absolute bottom-4 left-4 right-4"
                                 >
                                     {card.button}
                                 </button>
@@ -101,7 +104,7 @@ export default function HomePage() {
                 </div>
 
                 {/* Инструкция */}
-                <div className="bg-white rounded-xl shadow-lg p-6 max-w-4xl w-full text-black">
+                <div className="bg-white rounded-xl shadow-lg p-6 max-w-4xl w-full text-[#34495E] border border-[#D5D8DC]">
                     <h2 className="text-2xl font-bold mb-6">📘 Пошаговая инструкция</h2>
 
                     {/* Часть 1 */}

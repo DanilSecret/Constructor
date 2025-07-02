@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useColumnsStore } from "@/store/columns_store";
 import { GetAllColumns } from "@/app/Api/Api";
 import { Columns } from "@/app/models/models";
@@ -8,6 +8,8 @@ import { useUserStore } from "@/store/store";
 import { useRouter } from "next/navigation";
 import Header from "@/app/components/Header";
 import {useFilterJoinStore} from "@/store/filter_joins_store";
+import Image from "next/image";
+import Link from "next/link";
 
 
 export default function ColumnsPage() {
@@ -86,33 +88,51 @@ export default function ColumnsPage() {
     }
 
     return (
-        <div className="bg-white min-h-screen flex flex-col">
+        <div className="bg-[#F5F7FA] min-h-screen flex flex-col">
             <Header />
             <div className="flex justify-center items-start flex-1 mt-10 px-4">
                 <div className="w-full max-w-2xl">
-                    {/* Заголовок и подсказка */}
-                    <div className="flex justify-between items-center mb-4">
-                        <h1 className="text-3xl font-bold text-black">Выбор столбцов</h1>
-                        <div className="relative group">
-                            <div className="text-blue-600 cursor-pointer text-sm underline">?</div>
-                            <div className="absolute right-0 mt-1 w-64 p-2 bg-gray-100 border rounded shadow text-sm text-black hidden group-hover:block z-10">
-                                Выберите нужные столбцы и нажмите &#34;Сохранить&#34;.<br />
+                    <div className="w-full relative mb-4 flex items-center">
+                        <Link
+                            href="/"
+                            className="text-sm text-blue-600 hover:underline mr-6"
+                        >
+                            <Image
+                                src="/Back.svg"
+                                alt="Назад"
+                                width={30}
+                                height={30}
+                            />
+                        </Link>
+
+                        <h1 className="text-3xl font-bold text-[#34495E] absolute left-1/2 transform -translate-x-1/2">
+                            Выбор столбцов
+                        </h1>
+
+                        <div className="absolute right-0 group cursor-pointer">
+                            <Image
+                                src="/Question.svg"
+                                alt="Вопрос"
+                                width={30}
+                                height={30}
+                            />
+                            <div
+                                className="absolute top-full right-0 mt-1 w-64 p-2 bg-gray-100 border rounded shadow text-sm text-black hidden group-hover:block z-10"
+                            >
+                                Выберите нужные столбцы и нажмите &#34;Сохранить&#34;.<br/>
                                 Поиск работает по имени столбца.
                             </div>
                         </div>
                     </div>
-
-                    {/* Поисковый фильтр */}
                     <input
                         type="text"
                         placeholder="Фильтр по названию столбца..."
                         value={filter}
                         onChange={(e) => setFilter(e.target.value)}
-                        className="w-full mb-4 px-4 py-2 border border-gray-300 rounded text-black"
+                        className="bg-white w-full mb-4 px-4 py-2 border border-[#D5D8DC] rounded text-black"
                     />
-
-                    {/* Список чекбоксов */}
-                    <div className="border rounded-lg shadow-md p-4 max-h-[50vh] overflow-y-auto bg-white">
+                    <div
+                        className="border border-[#D5D8DC] rounded-lg shadow-md p-4 max-h-[50vh] overflow-y-auto bg-white">
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                             {filteredColumns.length > 0 ? (
                                 filteredColumns.map((col) => (
@@ -126,7 +146,7 @@ export default function ColumnsPage() {
                                             onChange={() => handleToggle(col.id)}
                                             className="w-4 h-4"
                                         />
-                                        <span className="text-black">{col.name}</span>
+                                        <span className="text-[#34495E]">{col.name}</span>
                                     </label>
                                 ))
                             ) : (
@@ -134,12 +154,10 @@ export default function ColumnsPage() {
                             )}
                         </div>
                     </div>
-
-                    {/* Кнопка сохранения */}
                     <div className="flex justify-center mt-6">
                         <button
                             onClick={handleSave}
-                            className="px-6 py-2 bg-blue-600 text-white font-semibold rounded hover:bg-blue-700 transition"
+                            className="px-6 py-2 bg-[#3498DB] text-white font-semibold rounded hover:bg-[#2F89C5] transition"
                         >
                             Сохранить выбор
                         </button>
