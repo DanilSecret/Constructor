@@ -49,7 +49,7 @@ class UserController(
     }
 
     @PostMapping("/download")
-    fun downloadXlsx(request: HistoryRequest): ResponseEntity<Any> {
+    fun downloadXlsx(@RequestBody request: HistoryRequest): ResponseEntity<Any> {
         return studentsService.createXlsx(request)
     }
 

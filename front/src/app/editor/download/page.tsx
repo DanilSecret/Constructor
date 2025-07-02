@@ -18,10 +18,7 @@ export default function WaitingPage() {
     // const hydratedCol = useColumnsStore((state) => state.hydrated);
 
     useEffect(() => {
-        console.log("UUID пользователя: ",userUUID)
-        console.log("Столбцы: ",col)
-        console.log("Фильтры: ",filter)
-        console.log("Соединения: ",joins)
+
         const PostAndDownload = async () => {
             if (!userUUID) {
                 console.error("UUID пользователя не найден");
@@ -29,7 +26,9 @@ export default function WaitingPage() {
                 return;
             }
             try {
-                const blob = await downloadExcel(userUUID, col, filter, joins);
+                const columnNames = col.map((c) => c.name);
+
+                const blob = await downloadExcel(userUUID, columnNames, filter, joins);
 
                 const url = window.URL.createObjectURL(blob);
                 const a = document.createElement("a");

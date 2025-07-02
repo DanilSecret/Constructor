@@ -64,7 +64,7 @@ class StudentService(
     }
 
     fun createXlsx(request: HistoryRequest): ResponseEntity<Any> {
-        val user: User = userRepository.getUserByUuid(request.userUUID)?: return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ResponseMessage("Не найден пользователь-заказчик", false))
+        val user: User = userRepository.getUserByUuid(UUID.fromString(request.userUUID))?: return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ResponseMessage("Не найден пользователь-заказчик", false))
         try {
             val builder: ReportDocBuilder = ReportDocBuilder()
 

@@ -8,7 +8,7 @@ export default async function AuthUser(email: string, password: string) {
     try {
         const response = await axios.post("http://localhost:8080/api/auth/login", { email, password }, { withCredentials: true, timeout: 10000 });
         const result = response.data;
-        return { success: true, message: 'Успешный вход', result: result };
+        return { success: true, message: 'Успешный вход', result: result.user };
     } catch (err) {
         const error = err as AxiosError<{ message: string }>;
         let message = "Ошибка соединения с сервером";
@@ -75,11 +75,15 @@ export async function GetAllColumns(): Promise<{ success: boolean; message?: str
     }
 }
 
-export async function downloadExcel(userUUID:string, col: Columns[], filter: Filter[], joins: string[][]): Promise<Blob> {
+export async function downloadExcel(userUUID:string, col: string[], filter: Filter[], joins: string[][]): Promise<Blob> {
+    console.log("UUID пользователя: ",userUUID)
+    console.log("Столбцы: ",col)
+    console.log("Фильтры: ",filter)
+    console.log("Соединения: ",joins)
     const response = await axios.post(
-        "",
+        "http://localhost:8080/api/user/download",
         { userUUID, col, filter, joins },
-        { responseType: "blob" }
+        { withCredentials: true, responseType: "blob" }
     );
     return response.data;
 }
