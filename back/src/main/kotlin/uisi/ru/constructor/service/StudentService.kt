@@ -191,4 +191,56 @@ class StudentService(
         }
         return  ResponseEntity.internalServerError().body(ResponseMessage("Не удалось обработать фильтры", false))
     }
+
+    fun updateStudent(studentUpdate: StudentUpdate): ResponseEntity<Any> {
+        val exists = studentRepository.getStudentByStudIdAndEnrlOrderNumber(studentUpdate.studId?: throw RuntimeException("Поле 'Номер студенческого билета' обязательно"),
+            studentUpdate.enrlOrderNumber?: throw RuntimeException("Поле 'Номер приказа о зачислении' обязательно"))?:
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ResponseMessage("Студента не найдено", false))
+
+        val upd = exists.copy(
+            uuid = exists.uuid,
+            surname = studentUpdate.surname?: exists.surname,
+            name = studentUpdate.name?: exists.name,
+            patronymic = studentUpdate.patronymic ?: exists.patronymic,
+            gender = studentUpdate.gender ?: exists.gender,
+            birthday = studentUpdate.birthday ?: exists.birthday,
+            phone = studentUpdate.phone ?: exists.phone,
+            regAddr = studentUpdate.regAddr ?: exists.regAddr,
+            actAddr = studentUpdate.actAddr ?: exists.actAddr,
+            passportSerial = studentUpdate.passportSerial ?: exists.passportSerial,
+            passportNumber = studentUpdate.passportNumber ?: exists.passportNumber,
+            passportDate = studentUpdate.passportDate ?: exists.passportDate,
+            passportSource = studentUpdate.passportSource ?: exists.passportSource,
+            snils = studentUpdate.snils ?: exists.snils,
+            medPolicy = studentUpdate.medPolicy ?: exists.medPolicy,
+            foreigner = studentUpdate.foreigner ?: exists.foreigner,
+            quota = studentUpdate.quota ?: exists.quota,
+            enrlDate = studentUpdate.enrlDate ?: exists.enrlDate,
+            enrlOrderDate = studentUpdate.enrlOrderDate ?: exists.enrlOrderDate,
+            enrlOrderNumber = studentUpdate.enrlOrderNumber,
+            studId = studentUpdate.studId,
+            studIdDate = studentUpdate.studIdDate ?: exists.studIdDate,
+            group = studentUpdate.group ?: exists.group,
+            educationLevel = studentUpdate.educationLevel ?: exists.educationLevel,
+            fundSrc = studentUpdate.fundSrc ?: exists.fundSrc,
+            course = studentUpdate.course ?: exists.course,
+            studyForm = studentUpdate.studyForm ?: exists.studyForm,
+            program = studentUpdate.program ?: exists.program,
+            programCode = studentUpdate.programCode ?: exists.programCode,
+            profile = studentUpdate.profile ?: exists.profile,
+            duration = studentUpdate.duration ?: exists.duration,
+            regEndDate = studentUpdate.regEndDate ?: exists.regEndDate,
+            actEndDate = studentUpdate.actEndDate ?: exists.actEndDate,
+            orderEndDate = studentUpdate.orderEndDate ?: exists.orderEndDate,
+            orderEndNumber = studentUpdate.orderEndNumber ?: exists.orderEndNumber,
+            acadStartDate = studentUpdate.acadStartDate ?: exists.acadStartDate,
+            acadEndDate = studentUpdate.acadEndDate ?: exists.acadEndDate,
+            orderAcadDate = studentUpdate.orderAcadDate ?: exists.orderAcadDate,
+            orderAcadNumber = studentUpdate.orderAcadNumber ?: exists.orderAcadNumber
+        )
+
+        studentRepository.save(upd)
+
+        return ResponseEntity.ok().body(ResponseMessage("Данные успешно обновлены", true))
+    }
 }

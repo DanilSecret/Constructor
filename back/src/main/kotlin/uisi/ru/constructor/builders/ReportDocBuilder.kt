@@ -113,10 +113,16 @@ class ReportDocBuilder(
                 else -> {
                     formatter.isLenient = false
                     try {
-                        formatter.format(value?.trim())
+                        formatter.parse(value?.trim())
                     }
                     catch (e: Exception){
-                        value?.trim()
+                        if (tableColumns[key] == "course") {
+                            value?.trim()?.toInt()?.toShort()
+                        }
+                        else if (tableColumns[key] == "duration") {
+                            value?.trim()?.toInt()
+                        }
+                        else value?.trim()
                     }
                 }
             }
