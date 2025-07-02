@@ -1,27 +1,26 @@
 package uisi.ru.constructor.controller
 
-import jakarta.servlet.http.Cookie
-import jakarta.servlet.http.HttpServletResponse
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Controller
-import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.multipart.MultipartFile
 import uisi.ru.constructor.model.*
+import uisi.ru.constructor.repository.HistoryRepository
+import uisi.ru.constructor.service.HistoryService
 import uisi.ru.constructor.service.StudentService
 import uisi.ru.constructor.service.UserService
-import java.util.UUID
+import java.util.*
 
 @Controller
 @RequestMapping("/api/user")
 class UserController(
     private val userService: UserService,
-    private val studentsService: StudentService
+    private val studentsService: StudentService,
+    private val historyService: HistoryService
 ) {
     @GetMapping("/getCols")
     fun getCols(): ResponseEntity<Any> {
@@ -41,19 +40,13 @@ class UserController(
         return studentsService.createXlsx(request)
     }
 
-    @GetMapping("/dev")
-    fun dev(@RequestBody dev: UserRegister): ResponseEntity<Any> {
-        val passwordEncoder = BCryptPasswordEncoder()
-        try {
-            return ResponseEntity.ok().body(DevResponse(
-                uuid = UUID.randomUUID(),
-                email = dev.email,
-                password = passwordEncoder.encode(dev.password),
-                role = Roles.valueOf(dev.role).toString()
-            ))
-        }
-        catch (e: Exception) {
-            return ResponseEntity.badRequest().body(ResponseMessage(e.message.toString()))
-        }
+    @PostMapping("/selfHistory")
+    fun getHistiry(@RequestBody userUUID: String): ResponseEntity<Any> {
+        return historyService.getSelfHistory(UUID.fromString(userUUID))
+    }
+
+    @PostMapping("/listStudents")
+    fun getStudents(@RequestBody filter: List<Map<String, String?>>?): ResponseEntity<Any> {
+        return studentsService.getStudents(filter)
     }
 }

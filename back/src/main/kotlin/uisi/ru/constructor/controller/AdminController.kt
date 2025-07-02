@@ -20,4 +20,9 @@ class AdminController(
     fun register(@RequestBody user: UserRegister): ResponseEntity<Any> {
         return userService.register(user)
     }
+
+    @PostMapping("/changePassword")
+    fun updPassword(@RequestBody userLogin: UserLogin): ResponseEntity<Any> {
+        return userService.update(userLogin.email, userLogin.password)
+    }
 }

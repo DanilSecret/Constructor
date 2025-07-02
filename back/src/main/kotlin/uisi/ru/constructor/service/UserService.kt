@@ -2,6 +2,7 @@ package uisi.ru.constructor.service
 
 import jakarta.servlet.http.Cookie
 import jakarta.servlet.http.HttpServletResponse
+import org.apache.coyote.Response
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
@@ -53,6 +54,23 @@ class UserService(
             }
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ResponseMessage("Пользователя с email ${userLogin.email} не найдено",false))
+    }
+
+    fun update(email: String, password: String): ResponseEntity<Any> {
+        val user = userRepository.findByEmail(email)?: return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ResponseMessage("Пользователя с email $email не найдено", false))
+        try {
+            val updUser = user.copy(
+                uuid = user.uuid,
+                email = email,
+                password = passwordEncoder.encode(password),
+                role = user.role
+            )
+            userRepository.save(updUser)
+            return ResponseEntity.ok().body(ResponseMessage("Пароль успешно обновлен", true))
+        }
+        catch (e: Exception) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ResponseMessage(e.message.toString(), false))
+        }
     }
 
     fun validatePassword(password: String, user: User): Boolean {

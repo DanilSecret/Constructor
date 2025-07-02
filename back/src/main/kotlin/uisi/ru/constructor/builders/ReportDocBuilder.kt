@@ -18,7 +18,7 @@ class ReportDocBuilder(
 
     private val formatter = SimpleDateFormat("dd.MM.yyyy")
 
-    private val data: MutableList<Map<String, String?>> = emptyList<Map<String,String?>>().toMutableList()
+    val data: MutableList<Map<String, String?>> = emptyList<Map<String,String?>>().toMutableList()
 
     private val tableColumns: Map<String, String> = mapOf(
         "Фамилия" to "surname",
@@ -165,7 +165,7 @@ class ReportDocBuilder(
             }
 
             joins.forEach{ joinGroup: List<String> ->
-                val key = joinGroup.joinToString("\n")
+                val key = joinGroup.joinToString(" ")
                 val value = joinGroup.mapNotNull { map[it] }.joinToString(" ")
                 newMap[key] = value
             }
