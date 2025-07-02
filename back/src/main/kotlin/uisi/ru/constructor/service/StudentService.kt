@@ -1,6 +1,8 @@
 package uisi.ru.constructor.service
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import jakarta.persistence.EntityManager
+import org.apache.coyote.Response
 import org.apache.poi.xssf.usermodel.XSSFWorkbook
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -13,9 +15,11 @@ import uisi.ru.constructor.repository.StudentRepository
 import uisi.ru.constructor.repository.UserRepository
 import java.io.ByteArrayOutputStream
 import java.io.InputStream
+import java.text.SimpleDateFormat
 import java.time.OffsetDateTime
-import java.util.UUID
+import java.util.*
 import kotlin.math.E
+import kotlin.reflect.full.memberProperties
 
 @Service
 class StudentService(
@@ -113,5 +117,80 @@ class StudentService(
             colsRu.add(map)
         }
         return ResponseEntity.ok().body(colsRu)
+    }
+
+    fun getStudents(filter: List<Map<String, String?>>?):ResponseEntity<Any> {
+        val cols: List<String> = Columns.entries.mapNotNull { it.desc }
+        val builder = ReportDocBuilder(entityManager)
+        val students = emptyList<Map<String, String?>>().toMutableList()
+        if (filter == null) {
+            val tableColumnsRev: Map<String, String> = mapOf(
+                "surname" to "Фамилия",
+                "name" to "Имя",
+                "patronymic" to "Отчество (при наличии)",
+                "gender" to "Пол",
+                "birthday" to "Дата рождения",
+                "phone" to "Номер телефона (при наличии)",
+                "regAddr" to "Адрес местожительства по прописке",
+                "actAddr" to "Адрес места жительства (фактический)",
+                "passportSerial" to "Серия паспорта (при наличии)",
+                "passportNumber" to "Номер паспорта",
+                "passportDate" to "Дата выдачи паспорта",
+                "passportSource" to "Кем выдан паспорт",
+                "snils" to "СНИЛС (при наличии)",
+                "medPolicy" to "Номер медицинского полиса (при наличии)",
+                "foreigner" to "Иностранный гражданин",
+                "quota" to "Особая квота (инвалид сирота)",
+                "enrlDate" to "Дата зачисления в образовательную организацию",
+                "enrlOrderDate" to "Дата приказа о зачислении",
+                "enrlOrderNumber" to "Номер приказа о зачислении",
+                "studId" to "Номер студенческого билета",
+                "studIdDate" to "Дата выдачи студенческого билета",
+                "group" to "Группа (при наличии)",
+                "educationLevel" to "Наименование уровня образования",
+                "fundSrc" to "Источник финансирования",
+                "course" to "Номер курса",
+                "studyForm" to "Форма обучения",
+                "program" to "Наименование направления",
+                "programCode" to "Код направления",
+                "profile" to "Наименование образовательной программы (Профиль)",
+                "duration" to "Срок реализации образовательной программы (кол-во месяцев)",
+                "regEndDate" to "Планируемая дата окончания обучения",
+                "actEndDate" to "Дата завершения обучения или отчисления (при наличии)",
+                "orderEndDate" to "Дата приказа о завершении обучения или отчислении (при наличии)",
+                "orderEndNumber" to "Номер приказа о завершении обучения или отчислении (при наличии)",
+                "acadStartDate" to "Дата начала академического отпуска (при наличии)",
+                "acadEndDate" to "Дата окончания академического отпуска (при наличии)",
+                "orderAcadDate" to "Дата приказа о предоставлении академического отпуска (при наличии)",
+                "orderAcadNumber" to "Номер приказа о предоставлении академического отпуска (при наличии)"
+            )
+
+            val mapper = ObjectMapper()
+            val students = studentRepository.findAll().mapNotNull { student: Student ->
+                mapper.convertValue(student, Map::class.java) as Map<String, Any?>
+            }
+            val formatter = SimpleDateFormat("dd.MM.yyyy")
+            students.mapNotNull { student: Map<String, Any?> ->
+                student.map{ (key, value) ->
+                    val newKey = tableColumnsRev[key]?: return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ResponseMessage("Ошибка при получении данных:\nСтолбцу $key не соответствует ни 1 описание", false))
+                    val stringValue = when (value) {
+                        is Date -> formatter.format(value)
+                        is Boolean -> if (value) "Да" else "Нет"
+                        else -> value?.toString()
+                    }
+                    newKey to stringValue
+                }.toMap()
+            }
+            return ResponseEntity.ok().body(students)
+        }
+        filter?.let {
+            it.forEach {
+                builder.addFilterGroup(cols, it)
+            }
+            val students = builder.data
+            return ResponseEntity.ok().body(students)
+        }
+        return  ResponseEntity.internalServerError().body(ResponseMessage("Не удалось обработать фильтры", false))
+
     }
 }

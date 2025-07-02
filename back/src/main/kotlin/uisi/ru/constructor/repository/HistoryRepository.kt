@@ -9,6 +9,6 @@ import java.util.UUID
 
 @Repository
 interface HistoryRepository: JpaRepository<History, UUID> {
-    fun findByUser(user: User): List<History>
-    fun findByDateBetween(startDate: OffsetDateTime, endDate:OffsetDateTime): List<History>
+    fun getHistoriesByUser(user: User): List<History>
+    fun getHistoriesByDateBetween(startDate: OffsetDateTime, endDate:OffsetDateTime): List<History>
 }
