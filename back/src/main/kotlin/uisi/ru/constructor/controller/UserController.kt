@@ -13,15 +13,15 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.multipart.MultipartFile
 import uisi.ru.constructor.model.*
-import uisi.ru.constructor.service.StudentsService
+import uisi.ru.constructor.service.StudentService
 import uisi.ru.constructor.service.UserService
-import java.util.*
+import java.util.UUID
 
 @Controller
 @RequestMapping("/api/user")
 class UserController(
     private val userService: UserService,
-    private val studentsService: StudentsService
+    private val studentsService: StudentService
 ) {
     @DeleteMapping("/logout")
     fun logout(response: HttpServletResponse): ResponseEntity<Any> {
@@ -35,7 +35,7 @@ class UserController(
         return ResponseEntity.ok().build()
     }
 
-    @GetMapping("getCols")
+    @GetMapping("/getCols")
     fun getCols(): ResponseEntity<Any> {
         return studentsService.getCols()
     }
@@ -46,6 +46,11 @@ class UserController(
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ResponseMessage("Файл пустой или отсутствует",false))
         }
         return studentsService.uploadXlsx(file.inputStream)
+    }
+
+    @GetMapping("/download")
+    fun downloadXlsx(request: HistoryRequest): ResponseEntity<Any> {
+        return studentsService.createXlsx(request)
     }
 
     @GetMapping("/dev")
@@ -60,7 +65,7 @@ class UserController(
             ))
         }
         catch (e: Exception) {
-            return ResponseEntity.badRequest().body(ResponseError(e.message.toString()))
+            return ResponseEntity.badRequest().body(ResponseMessage(e.message.toString()))
         }
     }
 }

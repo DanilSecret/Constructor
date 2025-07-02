@@ -1,23 +1,26 @@
 package uisi.ru.constructor.service
 
-import org.apache.poi.ss.usermodel.DataFormatter
 import org.apache.poi.xssf.usermodel.XSSFWorkbook
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
+import uisi.ru.constructor.builders.ReportDocBuilder
 import uisi.ru.constructor.builders.StudentDataBuilder
-import uisi.ru.constructor.model.Columns
-import uisi.ru.constructor.model.ResponseError
-import uisi.ru.constructor.model.ResponseMessage
-import uisi.ru.constructor.model.Student
+import uisi.ru.constructor.model.*
+import uisi.ru.constructor.repository.HistoryRepository
 import uisi.ru.constructor.repository.StudentRepository
+import uisi.ru.constructor.repository.UserRepository
+import java.io.ByteArrayOutputStream
 import java.io.InputStream
-import java.text.SimpleDateFormat
-import java.util.*
+import java.time.OffsetDateTime
+import java.util.UUID
+import kotlin.math.E
 
 @Service
-class StudentsService(
-    private val studentRepository: StudentRepository
+class StudentService(
+    private val studentRepository: StudentRepository,
+    private val userRepository: UserRepository,
+    private val historyRepository: HistoryRepository
 ) {
     fun uploadXlsx(file: InputStream): ResponseEntity<Any> {
         try {
@@ -55,7 +58,47 @@ class StudentsService(
 
             return ResponseEntity.ok().body(ResponseMessage("${table.size} записей успешно обработано", true))
         }
-        catch (e: Exception) { return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ResponseMessage(e.message.toString(), false)) }
+        catch (e: Exception) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ResponseMessage(e.message.toString(), false))
+        }
+    }
+
+    fun createXlsx(request: HistoryRequest): ResponseEntity<Any> {
+        val user: User = userRepository.getUserByUuid(request.userUUID)?: return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ResponseMessage("Не найден пользователь-заказчик", false))
+        try {
+            val builder: ReportDocBuilder = ReportDocBuilder()
+
+            request.filter.forEach { filter ->
+                builder.addFilterGroup(request.col, filter)
+            }
+
+            val report = builder.build(request.joins, request.col)
+
+            val exelConfig = ExcelConfig (
+                col = request.col,
+                filter = request.filter,
+                joins = request.joins
+            )
+
+            val historyRecord: History = History (
+                uuid = UUID.randomUUID(),
+                user = user,
+                request = exelConfig,
+                date = OffsetDateTime.now()
+            )
+
+            historyRepository.save(historyRecord)
+
+            val baos = ByteArrayOutputStream()
+            report.use{ it.write(baos) }
+            val file = baos.toByteArray()
+
+            return ResponseEntity.ok()
+                .header("Content-Disposition", "attachment; filename=отчет.xlsx")
+                .body(file)
+        }
+        catch (e: RuntimeException) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ResponseMessage(e.message.toString(), false))}
     }
 
     fun getCols(): ResponseEntity<Any> {
