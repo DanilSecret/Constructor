@@ -44,7 +44,7 @@ class AdminController(
     }
 
     @DeleteMapping("/delete")
-    fun deleteUser(@RequestBody userDelete: UserDelete): ResponseEntity<Any> {
+    fun deleteUser(@RequestBody userDelete: UUIDRequest): ResponseEntity<Any> {
         return userService.deleteUser(userDelete)
     }
 
