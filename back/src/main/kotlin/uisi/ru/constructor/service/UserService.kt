@@ -57,17 +57,37 @@ class UserService(
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ResponseMessage("Пользователя с email ${userLogin.email} не найдено",false))
     }
 
-    fun update(email: String, password: String): ResponseEntity<Any> {
-        val user = userRepository.findByEmail(email)?: return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ResponseMessage("Пользователя с email $email не найдено", false))
+    fun update(request: UserUpdate): ResponseEntity<Any> {
+        val user = userRepository.getUserByUuid(UUID.fromString(request.uuid))?: return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ResponseMessage("Пользователя не найдено", false))
+        request.email?.let {
+            userRepository.findByEmail(request.email)?.let {
+                return ResponseEntity.badRequest().body(ResponseMessage("Email уже занят"))
+            }
+        }
+        val password = when (request.password){
+            null -> user.password
+            else -> passwordEncoder.encode(request.password)
+        }
+        val role = when (request.role) {
+            null -> user.role
+            else -> try {
+                Roles.valueOf(request.role.uppercase()).toString()
+            }
+            catch (e: Exception) {
+                return ResponseEntity.badRequest().body(ResponseMessage("Роль задана неправильно", false))
+            }
+        }
+
         try {
             val updUser = user.copy(
                 uuid = user.uuid,
-                email = email,
-                password = passwordEncoder.encode(password),
-                role = user.role
+                email = request.email?: user.email,
+                password = password,
+                role = role
             )
+
             userRepository.save(updUser)
-            return ResponseEntity.ok().body(ResponseMessage("Пароль успешно обновлен", true))
+            return ResponseEntity.ok().body(ResponseMessage("Пользователь успешно обновлен", true))
         }
         catch (e: Exception) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ResponseMessage(e.message.toString(), false))
@@ -76,5 +96,20 @@ class UserService(
 
     fun validatePassword(password: String, user: User): Boolean {
         return if (passwordEncoder.matches(password, user.password)) true else false
+    }
+
+    fun getAllUsers(): ResponseEntity<Any> {
+        val users = userRepository.findAll()
+        if (users.isEmpty()) return ResponseEntity.internalServerError().body(ResponseMessage("Не удалось получить список пользователей", false))
+        return ResponseEntity.ok().body(users)
+    }
+
+    fun deleteUser(userDelete: UserDelete): ResponseEntity<Any> {
+        val user = userRepository.getUserByUuid(UUID.fromString(userDelete.uuid))?: return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ResponseMessage("Пользователя не найдено", false))
+        try {
+            userRepository.delete(user)
+            return ResponseEntity.ok().body(ResponseMessage("Пользователь удален", true))
+        }
+        catch (e: Exception) {return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ResponseMessage(e.message.toString(),false))}
     }
 }

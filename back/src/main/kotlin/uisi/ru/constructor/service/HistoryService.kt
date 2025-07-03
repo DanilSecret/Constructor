@@ -30,4 +30,24 @@ class HistoryService(
 
         return ResponseEntity.ok().body(historyList)
     }
+
+    fun getAllHistory(): ResponseEntity<Any> {
+        try {
+            val history = historyRepository.findAll()
+            return ResponseEntity.ok().body(history)
+        }
+        catch (e: Exception){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ResponseMessage(e.message.toString(), false))
+        }
+    }
+
+    fun deleteAll(): ResponseEntity<Any> {
+        try {
+            historyRepository.deleteAll()
+            return ResponseEntity.ok().body(ResponseMessage("Таблица очищена", true))
+        }
+        catch (e:Exception) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ResponseMessage(e.message.toString(), false))
+        }
+    }
 }

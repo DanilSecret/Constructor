@@ -120,6 +120,11 @@ class UserController(
         }
     }
 
+    @GetMapping("/allHistory")
+    fun getAllHistory(): ResponseEntity<Any> {
+        return historyService.getAllHistory()
+    }
+
     @DeleteMapping("/delete")
     fun deleteStudent(@RequestBody rawStudent: Map<String, String?>): ResponseEntity<Any> {
         val student = studentsService.parseMap(rawStudent)

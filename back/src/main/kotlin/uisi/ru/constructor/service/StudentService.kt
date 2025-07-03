@@ -335,4 +335,14 @@ class StudentService(
                 return ResponseEntity.internalServerError().body(ResponseMessage(e.message.toString(),false))}
         }
     }
+
+    fun deleteAll(): ResponseEntity<Any> {
+        try {
+            studentRepository.deleteAll()
+            return ResponseEntity.ok().body(ResponseMessage("Таблица очищена", true))
+        }
+        catch (e:Exception) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ResponseMessage(e.message.toString(), false))
+        }
+    }
 }
