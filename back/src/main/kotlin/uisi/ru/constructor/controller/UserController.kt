@@ -59,6 +59,11 @@ class UserController(
         return studentsService.getStudents(filterMap)
     }
 
+    @PostMapping("/getStudent")
+    fun getStudent(@RequestBody uuid: UUIDRequest): ResponseEntity<Any> {
+        return studentsService.getStudent(UUID.fromString(uuid.uuid))
+    }
+
     @PutMapping("/update")
     fun updStudent(@RequestBody rawStudentUpdate: Map<String, String?>): ResponseEntity<Any> {
         val tableColumns: Map<String, String> = mapOf(
