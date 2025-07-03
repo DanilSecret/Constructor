@@ -104,6 +104,11 @@ class UserService(
         return ResponseEntity.ok().body(users)
     }
 
+    fun getUser(uuid: UUID): ResponseEntity<Any> {
+        val user = userRepository.getUserByUuid(uuid)?: return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ResponseMessage("Пользователя не найдено", false))
+        return ResponseEntity.ok().body(user)
+    }
+
     fun deleteUser(userDelete: UserDelete): ResponseEntity<Any> {
         val user = userRepository.getUserByUuid(UUID.fromString(userDelete.uuid))?: return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ResponseMessage("Пользователя не найдено", false))
         try {

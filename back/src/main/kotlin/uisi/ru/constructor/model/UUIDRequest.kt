@@ -1,5 +1,5 @@
 package uisi.ru.constructor.model
 
-data class SelfHistoryRequest(
+data class UUIDRequest(
     val uuid: String
 )
