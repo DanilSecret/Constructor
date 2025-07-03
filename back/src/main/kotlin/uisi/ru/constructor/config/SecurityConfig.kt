@@ -4,6 +4,7 @@ import uisi.ru.constructor.security.JwtAuthFilter
 
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.context.annotation.Role
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
@@ -38,8 +39,8 @@ class SecurityConfig(
                 it.requestMatchers("/actuator/health").permitAll()
 //                it.requestMatchers("/api/user/**").permitAll()
 
-                it.requestMatchers("/api/admin/**").hasAuthority("ADMIN")
-                it.requestMatchers("/api/user/**").hasAnyAuthority(Roles.METHODIST.toString(),Roles.ADMIN.toString(),Roles.DEANERY.toString())// эндпоинты для ролей
+                it.requestMatchers("/api/admin/**").hasAnyAuthority(Roles.ADMIN.toString(), Roles.DEANERY.toString())
+                it.requestMatchers("/api/user/**").hasAnyAuthority(Roles.METHODIST.toString(),Roles.ADMIN.toString(),Roles.DEANERY.toString())
                 it.anyRequest().authenticated()
             }
             .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter::class.java)
