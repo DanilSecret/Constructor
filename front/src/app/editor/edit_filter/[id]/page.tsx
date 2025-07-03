@@ -91,13 +91,13 @@ export default function EditFilter() {
 
                 <div className="flex flex-col gap-4 text-black ">
                     {selectedColumns.map((col) => (
-                        <div key={col.id} className="flex items-center gap-4">
-                            <label className="w-60 font-medium">{col.name}</label>
+                        <div key={col} className="flex items-center gap-4">
+                            <label className="w-60 font-medium">{col}</label>
                             <input
                                 type="text"
-                                value={filtersInput[col.name] || ""}
-                                onChange={(e) => handleInputChange(col.name, e.target.value)}
-                                placeholder={`Введите фильтр для ${col.name}`}
+                                value={filtersInput[col] || ""}
+                                onChange={(e) => handleInputChange(col, e.target.value)}
+                                placeholder={`Введите фильтр для ${col}`}
                                 className="flex-grow border border-gray-300 rounded px-3 py-2 bg-white text-black"
                             />
                         </div>

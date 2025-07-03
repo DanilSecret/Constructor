@@ -6,6 +6,8 @@ import { useUserStore } from '@/store/store';
 import { useRouter } from "next/navigation";
 import { ReportEntry } from "@/app/models/models";
 import { ReportsHistory } from "@/app/Api/Api";
+import {useColumnsStore} from "@/store/columns_store";
+import {useFilterJoinStore} from "@/store/filter_joins_store";
 
 export default function ReportHistory() {
     const [reports, setReports] = useState<ReportEntry[]>([]);
@@ -14,6 +16,9 @@ export default function ReportHistory() {
 
     const userUUID = useUserStore((state) => state.userData?.uuid);
     const isAuth = useUserStore((state) => state.isAuth);
+    const { setSelectedColumns } = useColumnsStore();
+    const { setFilters, setJoins } = useFilterJoinStore();
+
     const hydrated = useUserStore((state) => state.hydrated);
     const router = useRouter();
 
@@ -28,6 +33,7 @@ export default function ReportHistory() {
             const result = await ReportsHistory(userUUID);
 
             if (result.success) {
+                console.log(result.data)
                 setReports(result.data);
             } else {
                 setMessage(result.message || "Ошибка при получении истории.");
@@ -52,7 +58,7 @@ export default function ReportHistory() {
                 )}
 
                 <ul className="space-y-4">
-                    {reports.map((report, idx) => (
+                    {reports.slice().reverse().map((report, idx) => (
                         <li
                             key={idx}
                             className="bg-white rounded shadow border border-[#D5D8DC] p-4"
@@ -70,24 +76,49 @@ export default function ReportHistory() {
                                 </div>
                             </div>
 
-                            <div className="mb-2">
-                                <div className="text-sm text-gray-600">Выбранные колонки:</div>
-                                <ul className="list-disc pl-5 text-sm text-[#34495E] mt-1">
-                                    {report.col.map((col, i) => (
-                                        <li key={i}>{col}</li>
-                                    ))}
-                                </ul>
-                            </div>
 
                             <button
                                 onClick={() => setExpanded(expanded === idx ? null : idx)}
                                 className="text-blue-600 text-sm underline"
                             >
-                                {expanded === idx ? 'Скрыть фильтры и соединения' : 'Показать фильтры и соединения'}
+                                {expanded === idx ? 'Скрыть столбцы, фильтры и соединения' : 'Показать столбцы, фильтры и соединения'}
                             </button>
+                            <div className="flex justify-end space-x-2 mt-4">
+                                <button
+                                    onClick={() => {
+                                        setSelectedColumns(report.col);
+                                        setFilters(report.filter);
+                                        setJoins(report.joins);
+                                        router.push('/editor');
+                                    }}
+                                    className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-1 rounded text-sm"
+                                >
+                                    Открыть в редакторе
+                                </button>
+                                <button
+                                    onClick={() => {
+                                        setSelectedColumns(report.col);
+                                        setFilters(report.filter);
+                                        setJoins(report.joins);
+                                        router.push('/editor/download');
+                                    }}
+                                    className="bg-gray-600 hover:bg-gray-700 text-white px-4 py-1 rounded text-sm"
+                                >
+                                    Скачать
+                                </button>
+                            </div>
+
 
                             {expanded === idx && (
                                 <div className="mt-3 space-y-3 text-sm text-[#34495E]">
+                                    <div className="mb-2">
+                                        <div className="text-sm text-gray-600">Выбранные колонки:</div>
+                                        <ul className="list-disc pl-5 text-sm text-[#34495E] mt-1">
+                                            {report.col.map((col, i) => (
+                                                <li key={i}>{col}</li>
+                                            ))}
+                                        </ul>
+                                    </div>
                                     <div>
                                         <div className="font-semibold mb-1">Фильтры:</div>
                                         {report.filter.length === 0 ? (

@@ -7,10 +7,9 @@ import { Columns } from "@/app/models/models";
 import { useUserStore } from "@/store/store";
 import { useRouter } from "next/navigation";
 import Header from "@/app/components/Header";
-import {useFilterJoinStore} from "@/store/filter_joins_store";
+import { useFilterJoinStore } from "@/store/filter_joins_store";
 import Image from "next/image";
 import Link from "next/link";
-
 
 export default function ColumnsPage() {
     const { selectedColumns, setSelectedColumns } = useColumnsStore();
@@ -37,8 +36,7 @@ export default function ColumnsPage() {
                 const result = await GetAllColumns();
                 if (result.success && result.data) {
                     setColumns(result.data);
-                    const initiallySelected = selectedColumns.map((col) => col.id);
-                    setLocalSelected(initiallySelected);
+                    setLocalSelected(selectedColumns);
                 } else {
                     setError(result.message || "Ошибка при получении колонок");
                 }
@@ -48,24 +46,19 @@ export default function ColumnsPage() {
         }
     }, [selectedColumns, isAuth, hydrated, router, resetAll]);
 
-
-    const handleToggle = (id: string) => {
+    const handleToggle = (name: string) => {
         setLocalSelected((prev) =>
-            prev.includes(id)
-                ? prev.filter((colId) => colId !== id)
-                : [...prev, id]
+            prev.includes(name)
+                ? prev.filter((n) => n !== name)
+                : [...prev, name]
         );
     };
 
     const handleSave = () => {
-        const selected = columns.filter((col) =>
-            localSelected.includes(col.id)
-        );
-        setSelectedColumns(selected);
+        setSelectedColumns(localSelected);
         alert("Выбранные столбцы сохранены");
         router.push("/editor");
     };
-
 
     const filteredColumns = columns.filter((col) =>
         col.name.toLowerCase().includes(filter.toLowerCase())
@@ -119,7 +112,7 @@ export default function ColumnsPage() {
                             <div
                                 className="absolute top-full right-0 mt-1 w-64 p-2 bg-gray-100 border rounded shadow text-sm text-black hidden group-hover:block z-10"
                             >
-                                Выберите нужные столбцы и нажмите &#34;Сохранить&#34;.<br/>
+                                Выберите нужные столбцы и нажмите &#34;Сохранить&#34;.<br />
                                 Поиск работает по имени столбца.
                             </div>
                         </div>
@@ -131,8 +124,7 @@ export default function ColumnsPage() {
                         onChange={(e) => setFilter(e.target.value)}
                         className="bg-white w-full mb-4 px-4 py-2 border border-[#D5D8DC] rounded text-black"
                     />
-                    <div
-                        className="border border-[#D5D8DC] rounded-lg shadow-md p-4 max-h-[50vh] overflow-y-auto bg-white">
+                    <div className="border border-[#D5D8DC] rounded-lg shadow-md p-4 max-h-[50vh] overflow-y-auto bg-white">
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                             {filteredColumns.length > 0 ? (
                                 filteredColumns.map((col) => (
@@ -142,8 +134,8 @@ export default function ColumnsPage() {
                                     >
                                         <input
                                             type="checkbox"
-                                            checked={localSelected.includes(col.id)}
-                                            onChange={() => handleToggle(col.id)}
+                                            checked={localSelected.includes(col.name)}
+                                            onChange={() => handleToggle(col.name)}
                                             className="w-4 h-4"
                                         />
                                         <span className="text-[#34495E]">{col.name}</span>

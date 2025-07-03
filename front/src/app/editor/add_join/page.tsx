@@ -66,15 +66,15 @@ export default function AddJoinPage() {
                 </div>
                 <div className="flex flex-col gap-4">
                     {selectedColumns.map((col) => (
-                        <label key={col.id} className="flex items-center gap-3">
+                        <label key={col} className="flex items-center gap-3">
                             <input
                                 type="checkbox"
-                                checked={checkedColumns[col.name] ?? false}
-                                onChange={() => handleCheckboxChange(col.name)}
+                                checked={checkedColumns[col] ?? false}
+                                onChange={() => handleCheckboxChange(col)}
                                 className="w-5 h-5"
                             />
 
-                            <span>{col.name}</span>
+                            <span>{col}</span>
                         </label>
                     ))}
                 </div>
