@@ -1,36 +1,197 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Документация по проекту Constructor
 
-## Getting Started
+<br> Локальное окружение: `http://localhost:8080`
 
-First, run the development server:
+---
+Пример формирования адреса:
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+```http
+GET http://localhost:8080/api/user/upload
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Где: <br>
+`localhost:8080` - адрес сервера <br>
+`/api` - обращение к api <br>
+`/user` - название роли или сервиса <br>
+`/upload` - эндпоинт
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
+# Пользователи
+## Авторизация
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+---
 
-## Learn More
+### Вход
 
-To learn more about Next.js, take a look at the following resources:
+```http
+POST http://localhost:8080/api/auth/login
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+#### Запрос:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```curl
+curl --request POST \
+  --url http://localhost:8080/api/auth/login \
+  --header 'withCredentials: true' \
+  --data '{
+	"email": "test",
+	"password":"test"
+}'
+```
+где: <br>
 
-## Deploy on Vercel
+| Параметр    | Значение           |
+|-------------|--------------------|
+| email       | Email пользователя |
+| password    | Введенный пароль   |
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Ответ:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+#### Успешный вход:
+
+```json
+{
+  "token": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0IHVzZXIiLCJpYXQiOjE3NDQwNDY2NzIsImV4cCI6MTc0NDEzMzA3Mn0.5o1l1kGDzOb10cPQNW-f4sBJHhwOVKXJ37ogK8G_ibI",
+  "user": {
+    "uuid": "5a86f10d-a94f-41f2-a192-8ec5d7c1b7c8",
+    "email": "test user",
+    "passport": "test",
+    "role": "USER"
+  }
+}
+```
+
+```http
+Status Code = 200 OK
+```
+
+#### Неверный запрос:
+```json
+{
+  "error" : "Неверный запрос"
+}
+```
+```http
+Status Code = 400 Bad Request
+```
+#### Неверный email или пароль:
+```json
+{
+  "error" : "Неверный email или пароль"
+}
+```
+```http
+Status Code = 401 Unauthorized
+```
+---
+#### Доступ запрещён:
+```json
+{
+  "error" : "Доступ запрещён"
+}
+```
+```http
+Status Code = 403 Forbidden
+```
+---
+
+## Регистрация пользователя (в админ панели)
+
+```http
+POST http://localhost:8080/api/admin/register
+```
+
+#### Запрос:
+
+```curl
+curl --request POST \
+  --url http://localhost:8080/api/admin/register \
+  --header '' \
+  --data '{
+    "email": "test user",
+    "password": "123"
+}'
+```
+
+где: <br>
+
+| Параметр  | Значение                                                   |
+|-----------|------------------------------------------------------------|
+| email     | Email пользователя (должен быть уникальным)                |
+| password  | Пароль                                                     |
+### Ответ:
+
+---
+
+#### Успешная регистрация:
+
+```json
+{
+  "token": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMjM0NSIsImlhdCI6MTc0MzUyMTgyOCwiZXhwIjoxNzQzNjA4MjI4fQ.vXkDTsNhsrnXlRf_ei-eJK3q4X78YFcIZMzuyMUbCsY",
+  "user": {
+    "id": "5a86f10d-a94f-41f2-a192-8ec5d7c1b7c8",
+    "email": "user",
+    "role": "USER"
+  }
+}
+```
+```http
+Status Code = 200 OK
+```
+
+---
+
+#### Совпадающие данные:
+
+```json
+{
+    "error": "Пользователь с таким email уже существует"
+}
+```
+```http
+Status Code = 400 Bad Request
+```
+
+---
+## Выход из системы
+
+```http
+DELETE http://localhost:8080/api/user/logout
+```
+Удаляет JWT cookie, завершает сессию пользователя.
+```curl
+curl --request DELETE \
+--url http://localhost:8080/api/user/logout \
+--cookie "JSESSIONID=your_session_id"
+```
+
+# Работа с файлами
+
+## Загрузка файла
+
+```http
+POST http://localhost:8080/api/user/upload
+```
+Запрос:
+```curl
+curl --request POST \
+--url http://localhost:8080/api/user/upload \
+--header 'Content-Type: multipart/form-data' \
+--cookie "JSESSIONID=your_session_id" \
+--form 'file=@"путь к файлу"'
+```
+## Получение всех колонок
+```http
+GET http://localhost:8080/api/user/getCols
+```
+Описание:
+Возвращает список столбцов данных студентов (структура зависит от studentsService.getCols()).
+```curl
+curl --request GET \
+  --url http://localhost:8080/api/user/getCols \
+  --cookie "JSESSIONID=your_session_id"
+```
+
+
+
+

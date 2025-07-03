@@ -1,10 +1,11 @@
 "use client";
 
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import { useRouter } from "next/navigation";
 import { useColumnsStore } from "@/store/columns_store";
 import {useFilterJoinStore} from "@/store/filter_joins_store";
 import {useUserStore} from "@/store/store";
+import Image from "next/image";
 
 export default function AddFilterPage() {
     const router = useRouter();
@@ -48,40 +49,55 @@ export default function AddFilterPage() {
     },[hydrated, hydratedCol, hydratedFil, isAuth, router])
 
     return (
-        <div className="max-w-3xl mx-auto p-6 bg-white text-black rounded shadow-md">
-            <h2 className="text-xl font-semibold mb-6">Добавить фильтры</h2>
-
-            <div className="flex flex-col gap-4">
-                {selectedColumns.map((col) => (
-                    <div key={col.id} className="flex items-center gap-4">
-                        <label className="w-48 font-medium">{col.name}</label>
-                        <input
-                            type="text"
-                            value={filtersInput[col.name] || ""}
-                            onChange={(e) => handleInputChange(col.name, e.target.value)}
-                            placeholder={`Введите фильтр для ${col.name}`}
-                            className="flex-grow border border-gray-300 rounded px-3 py-2 bg-white text-black"
-                        />
+        <div className="min-h-screen bg-[#f6f8fb] flex flex-col items-center justify-center">
+            <div className="bg-white rounded-lg shadow p-5 w-full max-w-4xl my-20 border border-[#D5D8DC]">
+                <div className="w-full relative flex items-center mb-10">
+                <h2 className="text-xl text-[#2f3a4c] absolute left-1/2 transform -translate-x-1/2">Добавить фильтр</h2>
+                <div className="absolute right-0 top-1/2 -translate-y-1/2 group cursor-pointer">
+                    <Image
+                        src="/Question.svg"
+                        alt="Вопрос"
+                        width={30}
+                        height={30}
+                    />
+                    <div
+                        className="absolute top-full right-0 mt-1 w-64 p-2 bg-gray-100 border rounded shadow text-sm text-black hidden group-hover:block z-10">
+                        Укажите значения для фильтров, чтобы настроить, какие данные будут показаны в отчёте.
                     </div>
-                ))}
-            </div>
+                </div>
+                </div>
+                <div className="flex flex-col gap-4 text-black">
+                    {selectedColumns.map((col) => (
+                        <div key={col} className="flex items-center gap-4">
+                            <label className="w-60 font-medium">{col}</label>
+                            <input
+                                type="text"
+                                value={filtersInput[col] || ""}
+                                onChange={(e) => handleInputChange(col, e.target.value)}
+                                placeholder="Введите фильтр"
+                                className="flex-grow border border-gray-300 rounded px-3 py-2 bg-white text-black"
+                            />
+                        </div>
+                    ))}
+                </div>
 
-            <div className="mt-8 flex justify-end gap-4">
-                <button
-                    type="button"
-                    onClick={() => router.push("/editor")}
-                    className="px-4 py-2 border border-gray-400 rounded hover:bg-gray-100"
-                >
-                    Отмена
-                </button>
+                <div className="mt-8 flex justify-center gap-4">
+                    <button
+                        type="button"
+                        onClick={() => router.push("/editor")}
+                        className="px-4 py-2 border border-gray-400 rounded hover:bg-gray-100 text-black"
+                    >
+                        Отмена
+                    </button>
 
-                <button
-                    type="button"
-                    onClick={handleSave}
-                    className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-                >
-                    Сохранить
-                </button>
+                    <button
+                        type="button"
+                        onClick={handleSave}
+                        className="px-4 py-2 bg-[#3498DB] hover:bg-[#2F89C5] transition text-white rounded"
+                    >
+                        Сохранить фильтр
+                    </button>
+                </div>
             </div>
         </div>
     );

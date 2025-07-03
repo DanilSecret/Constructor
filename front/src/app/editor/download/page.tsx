@@ -28,7 +28,7 @@ export default function WaitingPage() {
             router.push("/sign_in/");
             return;
         }
-        if (hasRun.current) return; // 👈 блокировка повтора
+        if (hasRun.current) return;
         hasRun.current = true;
 
         const PostAndDownload = async () => {
@@ -38,8 +38,7 @@ export default function WaitingPage() {
                 return;
             }
             try {
-                const columnNames = col.map((c) => c.name);
-                const blob = await downloadExcel(userUUID, columnNames, filter, joins);
+                const blob = await downloadExcel(userUUID, col, filter, joins);
                 const url = window.URL.createObjectURL(blob);
                 const a = document.createElement("a");
                 a.href = url;

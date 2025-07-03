@@ -11,3 +11,11 @@ export interface Columns{
     id: string;
     name: string;
 }
+
+export interface ReportEntry {
+    email: string;
+    col: string[];
+    filter: Record<string, string>[];
+    joins: string[][];
+    date: string;
+};

@@ -16,6 +16,9 @@ interface FilterJoinState {
     updateJoin: (index: number, joinGroup: string[]) => void;
     removeJoin: (index: number) => void;
 
+    setFilters: (filters: Filter[]) => void;
+    setJoins: (joins: JoinGroup) => void;
+
     resetAll: () => void;
     setHydrated: () => void;
     getFilterById: (index: number) => Filter | undefined;
@@ -63,6 +66,9 @@ export const useFilterJoinStore = create<FilterJoinState>()(
                     updated.splice(index, 1);
                     return { joins: updated };
                 }),
+
+            setFilters: (filters) => set(() => ({ filters })),
+            setJoins: (joins) => set(() => ({ joins })),
 
             resetAll: () => set({ filters: [], joins: [] }),
 
