@@ -122,17 +122,26 @@ class StudentService(
     fun getStudents(filter: List<Map<String, String?>>?):ResponseEntity<Any> {
         val builder = ReportDocBuilder(entityManager)
         val cols = listOf(
-            "uuid", "surname", "name", "patronymic",
-            "gender", "birthday", "phone", "regAddr",
-            "actAddr", "passportSerial", "passportNumber",
-            "passportDate", "passportSource", "snils",
-            "medPolicy", "foreigner", "quota", "enrlDate",
-            "enrlOrderDate", "enrlOrderNumber", "studId",
-            "studIdDate", "group", "educationLevel", "fundSrc",
-            "course", "studyForm", "program", "programCode",
-            "profile", "duration", "regEndDate", "actEndDate",
-            "orderEndDate", "orderEndNumber", "acadStartDate",
-            "acadEndDate", "orderAcadDate", "orderAcadNumber"
+            "uuid", "Фамилия", "Имя", "Отчество (при наличии)",
+            "Пол", "Дата рождения", "Номер телефона (при наличии)",
+            "Адрес местожительства по прописке", "Адрес места жительства (фактический)",
+            "Серия паспорта (при наличии)", "Номер паспорта", "Дата выдачи паспорта",
+            "Кем выдан паспорт", "СНИЛС (при наличии)", "Номер медицинского полиса (при наличии)",
+            "Иностранный гражданин", "Особая квота (инвалид сирота)",
+            "Дата зачисления в образовательную организацию", "Дата приказа о зачислении",
+            "Номер приказа о зачислении", "Номер студенческого билета",
+            "Дата выдачи студенческого билета", "Группа (при наличии)",
+            "Наименование уровня образования", "Источник финансирования",
+            "Номер курса", "Форма обучения", "Наименование направления",
+            "Код направления", "Наименование образовательной программы (Профиль)",
+            "Срок реализации образовательной программы (кол-во месяцев)",
+            "Планируемая дата окончания обучения", "Дата завершения обучения или отчисления (при наличии)",
+            "Дата приказа о завершении обучения или отчислении (при наличии)",
+            "Номер приказа о завершении обучения или отчислении (при наличии)",
+            "Дата начала академического отпуска (при наличии)",
+            "Дата окончания академического отпуска (при наличии)",
+            "Дата приказа о предоставлении академического отпуска (при наличии)",
+            "Номер приказа о предоставлении академического отпуска (при наличии)"
         )
 
         if (filter == null) {
@@ -184,7 +193,7 @@ class StudentService(
 
         val parsedStudent = student.map { (key,value) ->
             val stringValue = when (value) {
-                is Date -> formatter.format(value)
+                is Long -> formatter.format(Date(value))
                 is Boolean -> if (value) "Да" else "Нет"
                 else -> value?.toString()
             }
