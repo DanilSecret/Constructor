@@ -125,7 +125,7 @@ export default function FileUploadPage() {
                         <button
                             type="submit"
                             disabled={loading}
-                            className="w-full bg-[#3498DB] text-white py-2 px-4 rounded-lg hover:bg-[#2F89C5] disabled:opacity-50"
+                            className="w-full bg-[#3498DB] text-white py-2 px-4 rounded-lg hover:bg-[#2F89C5] disabled:opacity-50 cursor-pointer"
                         >
                             {loading ? "Загрузка..." : "Отправить файл"}
                         </button>

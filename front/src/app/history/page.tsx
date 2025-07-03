@@ -63,7 +63,7 @@ export default function ReportHistory() {
                             />
                         </Link>
                         <h1 className="text-2xl font-bold text-[#34495E] absolute left-1/2 transform -translate-x-1/2">История отчетов</h1>
-                        <div className="absolute right-0 group cursor-pointer">
+                        <div className="absolute right-0 group cursor-help">
                             <Image
                                 src="/Question.svg"
                                 alt="Вопрос"
@@ -71,8 +71,8 @@ export default function ReportHistory() {
                                 height={30}
                             />
                             <div className="absolute top-full right-0 mt-1 w-64 p-2 bg-gray-100 border rounded shadow text-sm text-black hidden group-hover:block z-10">
-                                "Открыть в редакторе" — перейдёт на страницу редактирования отчёта с выбранными в нем столбцами, фильтрами и соединениями.<br/>
-                                "Скачать" — откроет страницу для скачивания выбранного отчёта.
+                                "Открыть в редакторе" — переход на страницу редактирования отчёта с выбранными в нем столбцами, фильтрами и соединениями.<br/>
+                                "Скачать" — открытие страницы для скачивания выбранного отчёта.
                             </div>
                         </div>
                     </div>
@@ -120,7 +120,7 @@ export default function ReportHistory() {
                                             setJoins(report.joins);
                                             router.push('/editor');
                                         }}
-                                        className="bg-[#3498DB] hover:bg-[#2F89C5] transition text-white px-4 py-1 rounded text-sm flex items-center "
+                                        className="bg-[#3498DB] hover:bg-[#2F89C5] transition text-white px-4 py-1 rounded text-sm flex items-center cursor-pointer"
                                     >
                                         Открыть в редакторе
                                         <Image
@@ -138,7 +138,7 @@ export default function ReportHistory() {
                                             setJoins(report.joins);
                                             router.push('/editor/download');
                                         }}
-                                        className="bg-[#3498DB] hover:bg-[#2F89C5] transition text-white px-4 py-1 rounded text-sm flex items-center"
+                                        className="bg-[#3498DB] hover:bg-[#2F89C5] transition text-white px-4 py-1 rounded text-sm flex items-center cursor-pointer"
                                     >
                                         Скачать
                                         <Image

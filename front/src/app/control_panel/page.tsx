@@ -48,13 +48,13 @@ export default function AdminPanel() {
                     <div className="flex flex-col gap-6 items-center">
                         <button
                             onClick={() => router.push("/control_panel/full_history")}
-                            className="w-full sm:w-96 px-6 py-3 bg-[#3498DB] hover:bg-[#2F89C5] text-white text-lg rounded shadow transition"
+                            className="w-full sm:w-96 px-6 py-3 bg-[#3498DB] hover:bg-[#2F89C5] text-white text-lg rounded shadow transition cursor-pointer"
                         >
                             Общая история
                         </button>
                         <button
                             onClick={() => router.push("/control_panel/users")}
-                            className="w-full sm:w-96 px-6 py-3 bg-[#3498DB] hover:bg-[#2F89C5] text-white text-lg rounded shadow transition"
+                            className="w-full sm:w-96 px-6 py-3 bg-[#3498DB] hover:bg-[#2F89C5] text-white text-lg rounded shadow transition cursor-pointer"
                         >
                             Управление пользователями
                         </button>

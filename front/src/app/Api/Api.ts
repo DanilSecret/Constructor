@@ -170,7 +170,7 @@ export async function CreateUser(email: string, password: string, role: string )
         );
         return { success: true, data: response.data, message: "Успешно",};
     } catch (err) {
-        return handleAxiosError(err, "получении пользователей")
+        return handleAxiosError(err, "создании пользователя")
     }
 }
 
@@ -202,7 +202,7 @@ export async function searchStudents( search: string ) {
             message: "Успешно",
         };
     } catch (err) {
-        return handleAxiosError(err, "удалении пользователя");
+        return handleAxiosError(err, "поиске студента");
     }
 }
 
@@ -217,7 +217,7 @@ export async function GetStudentById( uuid: string ) {
             message: "Успешно",
         };
     } catch (err) {
-        return handleAxiosError(err, "удалении пользователя");
+        return handleAxiosError(err, "получении студента");
     }
 }
 
@@ -229,6 +229,23 @@ export async function updateStudentByUUID(student: StudentFull) {
             { withCredentials: true});
         return { success: true, result: response.data, message: "Успешно", };
     } catch (err) {
-        return handleAxiosError(err, "изменении пользователя");
+        return handleAxiosError(err, "изменении студента");
+    }
+}
+
+export async function deleteStudentByUUID(uuid: string) {
+    try {
+        const response = await axios.delete(
+            "http://localhost:8080/api/user/delete", {
+            data: { uuid },
+            withCredentials: true,
+        });
+        return {
+            success: true,
+            data: response.data,
+            message: "Успешно",
+        };
+    } catch (err) {
+        return handleAxiosError(err, "удалении студента");
     }
 }

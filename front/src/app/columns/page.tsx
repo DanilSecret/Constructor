@@ -102,7 +102,7 @@ export default function ColumnsPage() {
                             Выбор столбцов
                         </h1>
 
-                        <div className="absolute right-0 group cursor-pointer">
+                        <div className="absolute right-0 group cursor-help">
                             <Image
                                 src="/Question.svg"
                                 alt="Вопрос"
@@ -149,7 +149,7 @@ export default function ColumnsPage() {
                     <div className="flex justify-center mt-6">
                         <button
                             onClick={handleSave}
-                            className="px-6 py-2 bg-[#3498DB] text-white font-semibold rounded hover:bg-[#2F89C5] transition"
+                            className="px-6 py-2 bg-[#3498DB] text-white font-semibold rounded hover:bg-[#2F89C5] transition cursor-pointer"
                         >
                             Сохранить выбор
                         </button>
