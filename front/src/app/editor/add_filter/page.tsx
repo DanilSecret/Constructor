@@ -1,10 +1,11 @@
 "use client";
 
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import { useRouter } from "next/navigation";
 import { useColumnsStore } from "@/store/columns_store";
 import {useFilterJoinStore} from "@/store/filter_joins_store";
 import {useUserStore} from "@/store/store";
+import Image from "next/image";
 
 export default function AddFilterPage() {
     const router = useRouter();
@@ -50,7 +51,21 @@ export default function AddFilterPage() {
     return (
         <div className="min-h-screen bg-[#f6f8fb] flex flex-col items-center justify-center">
             <div className="bg-white rounded-lg shadow p-5 w-full max-w-4xl my-20 border border-[#D5D8DC]">
-                <h2 className="text-center text-xl text-[#2f3a4c] mb-8">Добавить фильтр</h2>
+                <div className="w-full relative flex items-center mb-10">
+                <h2 className="text-xl text-[#2f3a4c] absolute left-1/2 transform -translate-x-1/2">Добавить фильтр</h2>
+                <div className="absolute right-0 top-1/2 -translate-y-1/2 group cursor-pointer">
+                    <Image
+                        src="/Question.svg"
+                        alt="Вопрос"
+                        width={30}
+                        height={30}
+                    />
+                    <div
+                        className="absolute top-full right-0 mt-1 w-64 p-2 bg-gray-100 border rounded shadow text-sm text-black hidden group-hover:block z-10">
+                        Укажите значения для фильтров, чтобы настроить, какие данные будут показаны в отчёте.
+                    </div>
+                </div>
+                </div>
                 <div className="flex flex-col gap-4 text-black">
                     {selectedColumns.map((col) => (
                         <div key={col.id} className="flex items-center gap-4">
