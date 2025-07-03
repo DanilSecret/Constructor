@@ -84,9 +84,13 @@ export default function UserManagementPage() {
             <Header/>
             <div className="flex-1 flex justify-center items-stretch py-10">
                 <div className="max-w-screen-xl w-full mx-auto px-6">
-                    <div className="w-full p-9 rounded-[10px] shadow-md bg-white border border-[#D5D8DC] flex flex-col">
+                    <div
+                        className="w-full p-9 rounded-[10px] shadow-md bg-white border border-[#D5D8DC] flex flex-col flex-grow min-h-[calc(95vh-120px)] "
+                        style={{minWidth: '650px'}}
+                    >
                         <div className="flex items-center mb-6 justify-between">
-                            <div className="flex-none"><Link href="/control_panel" className="text-sm text-blue-600 hover:underlinee">
+                            <div className="flex-none"><Link href="/control_panel"
+                                                             className="text-sm text-blue-600 hover:underlinee">
                                 <Image src="/Back.svg" alt="Назад" width={30} height={30}/></Link>
                             </div>
                             <div className="flex-initial"><h1 className="text-xl font-bold text-[#34495E]">Управление
@@ -104,8 +108,6 @@ export default function UserManagementPage() {
                                         className="w-full px-4 py-2 border border-[#D5D8DC] rounded focus:outline-none focus:ring-2 focus:ring-[#3498DB] -ml-8"
                                     />
                                 </div>
-
-                                {/* Кнопка — фиксированная ширина */}
                                 <div className="flex-shrink-0">
                                     <button
                                         onClick={() => router.push("/control_panel/users/create")}

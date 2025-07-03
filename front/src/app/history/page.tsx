@@ -46,9 +46,9 @@ export default function ReportHistory() {
     }, [hydrated, isAuth, router, userUUID]);
 
     return (
-        <div className="min-h-screen bg-[#F5F7FA] text-black flex flex-col items-center justify-center">
+        <div className="min-h-screen bg-[#F5F7FA] text-black flex flex-col items-center">
             <Header />
-            <div className="bg-white rounded-lg shadow p-2 w-full max-w-4xl my-15 border border-[#D5D8DC]">
+            <div className="flex-1 w-full max-w-4xl p-2 border border-[#D5D8DC] rounded-lg bg-white shadow my-15">
                 <div className="max-w-screen-xl mx-auto py-3 px-4">
                     <div className="w-full relative mb-4 flex items-center mt-3 mb-10">
                         <Link
@@ -83,7 +83,10 @@ export default function ReportHistory() {
                     )}
 
                     {reports.length === 0 && !message && (
-                        <div className="text-gray-500">История пуста</div>
+                        <div
+                            className="flex flex-col items-center  min-h-[200px] w-full text-gray-500 text-lg">
+                            История пуста
+                        </div>
                     )}
 
                     <ul className="space-y-4">
