@@ -77,7 +77,7 @@ class StudentService(
             val parsedKey = tableColumns[key]?: throw RuntimeException(
                 "Не найдено ни 1 столбца соответствующего описанию $key")
 
-            val parsedValue = when (value?.toLowerCase()?.trim()) {
+            val parsedValue = when (value?.lowercase()?.trim()) {
                 "да" -> true
                 "нет" -> false
                 "true" -> true

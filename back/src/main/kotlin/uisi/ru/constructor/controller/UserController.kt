@@ -108,7 +108,30 @@ class UserController(
         )
         val formatter = SimpleDateFormat("dd.MM.yyyy")
 
-        val studentMap = studentsService.parseMap(rawStudentUpdate)
+        val studentMap = rawStudentUpdate.map { (key, value) ->
+            val parsedValue = when (value?.lowercase()?.trim()) {
+                "да" -> true
+                "нет" -> false
+                "true" -> true
+                "false" -> false
+                else -> {
+                    formatter.isLenient = false
+                    try {
+                        formatter.parse(value?.trim())
+                    }
+                    catch (e: Exception){
+                        if (key == "course") {
+                            value?.trim()?.toInt()?.toShort()
+                        }
+                        else if (key == "duration") {
+                            value?.trim()?.toInt()
+                        }
+                        else value?.trim()
+                    }
+                }
+            }
+            key to parsedValue
+        }.toMap()
 
         if (!(studentMap.containsKey("studId")&&studentMap.containsKey("enrlOrderNumber"))) {
             return ResponseEntity.badRequest().body(ResponseMessage("Поля 'Номер студенческого билета' и 'Номер приказа о зачислении' обязательны"))
