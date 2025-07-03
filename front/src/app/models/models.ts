@@ -35,62 +35,44 @@ export interface Student {
 
 export interface StudentFull {
     uuid: string;
-
-    lastName: string;
-    firstName: string;
+    surname: string;
+    name: string;
     patronymic?: string;
-
-    gender: "Мужской" | "Женский" | string;
-
-    birthDate: string; // ISO-строка
-
-    phoneNumber?: string;
-
-    registrationAddress: string;
-    residenceAddress: string;
-
-    passportSeries?: string;
+    gender: string;
+    birthday: string;
+    phone?: string;
+    regAddr: string;
+    actAddr: string;
+    passportSerial?: string;
     passportNumber: string;
-    passportIssueDate: string;
-    passportIssuedBy: string;
-
+    passportDate: string;
+    passportSource: string;
     snils?: string;
-    medicalPolicyNumber?: string;
-
-    foreignCitizen: boolean;
-    specialQuota: boolean;
-
-    enrollmentDate: string;
-    enrollmentOrderDate: string;
-    enrollmentOrderNumber: string;
-
-    studentCardNumber: string;
-    studentCardIssueDate: string;
-
+    medPolicy?: string;
+    foreigner: string;
+    quota: string;
+    enrlDate: string;
+    enrlOrderDate: string;
+    enrlOrderNumber: string;
+    studId: string;
+    studIdDate: string;
     group?: string;
-
-    educationLevelName: string;
-    fundingSource: string;
-
-    courseNumber: number;
+    educationLevel: string;
+    fundSrc: string;
+    course: string;
     studyForm: string;
-
-    directionName: string;
-    directionCode: string;
-
-    educationalProgramName: string;
-    programDurationMonths: number;
-
-    plannedGraduationDate: string;
-
-    graduationOrExpulsionDate?: string;
-    graduationOrExpulsionOrderDate?: string;
-    graduationOrExpulsionOrderNumber?: string;
-
-    academicLeaveStartDate?: string;
-    academicLeaveEndDate?: string;
-    academicLeaveOrderDate?: string;
-    academicLeaveOrderNumber?: string;
+    program: string;
+    programCode: string;
+    profile: string;
+    duration: string;
+    regEndDate: string;
+    actEndDate?: string;
+    orderEndDate?: string;
+    orderEndNumber?: string;
+    acadStartDate?: string;
+    acadEndDate?: string;
+    orderAcadDate?: string;
+    orderAcadNumber?: string;
 }
 
 

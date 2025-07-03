@@ -193,9 +193,24 @@ export async function deleteUserByUUID(uuid: string) {
 
 export async function searchStudents( search: string ) {
     try {
-        console.log(search)
         const response = await axios.post(
             `http://localhost:8080/api/user/listStudents`, { search },
+            { withCredentials: true});
+        return {
+            success: true,
+            result: response.data,
+            message: "Успешно",
+        };
+    } catch (err) {
+        return handleAxiosError(err, "удалении пользователя");
+    }
+}
+
+export async function GetStudentById( uuid: string ) {
+    try {
+        console.log(uuid)
+        const response = await axios.post(
+            `http://localhost:8080/api/user/getStudent`, { uuid },
             { withCredentials: true});
         return {
             success: true,

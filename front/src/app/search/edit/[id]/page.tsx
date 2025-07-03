@@ -1,11 +1,11 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import {useParams, useRouter, useSearchParams} from "next/navigation";
+import {useParams, useRouter} from "next/navigation";
 import { useUserStore } from "@/store/store";
 import Header from "@/app/components/Header";
 import { StudentFull } from "@/app/models/models";
-import { getStudentByUUID, updateStudentByUUID } from "@/app/Api/Api";
+import {GetStudentById, updateStudentByUUID} from "@/app/Api/Api";
 
 export default function StudentEditPage() {
     const router = useRouter();
@@ -33,12 +33,12 @@ export default function StudentEditPage() {
 
         async function fetchStudent() {
             setLoading(true);
-            const res = await getStudentByUUID(params.id);
-            if (res.success && res.data) {
-                setStudent(res.data);
+            const res = await GetStudentById(params.id as string);
+            if (res.success && res.result) {
+                setStudent(res.result);
             } else {
-                alert("Ошибка загрузки данных студента");
-                router.push("/control_panel/students");
+                // alert("Ошибка загрузки данных студента");
+                // router.push("");
             }
             setLoading(false);
         }
@@ -46,31 +46,36 @@ export default function StudentEditPage() {
         fetchStudent();
     }, [hydrated, isAuth, params.id, router]);
 
-    function handleChange(event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) {
-        const { name, value, type, checked } = event.target;
+    function handleChange(
+        event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
+    ) {
+        const { name, value, type } = event.target;
+
+        const newValue =
+            type === "checkbox"
+                ? (event.target as HTMLInputElement).checked
+                : value;
+
         setStudent((prev) =>
-            prev
-                ? {
-                    ...prev,
-                    [name]: type === "checkbox" ? checked : value,
-                }
-                : prev
+            prev ? { ...prev, [name]: newValue } : prev
         );
     }
 
-    async function handleSave(e: React.FormEvent) {
-        e.preventDefault();
-        if (!student) return;
 
-        setSaving(true);
-        const res = await updateStudentByUUID(student.uuid, student);
-        if (res.success) {
-            alert("Данные успешно сохранены");
-            router.push("/search/");
-        } else {
-            alert("Ошибка при сохранении данных");
-        }
-        setSaving(false);
+    async function handleSave() {
+        console.log(student)
+        // e.preventDefault();
+        // if (!student) return;
+        //
+        // setSaving(true);
+        // const res = await updateStudentByUUID(student.uuid, student);
+        // if (res.success) {
+        //     alert("Данные успешно сохранены");
+        //     router.push("/search/");
+        // } else {
+        //     alert("Ошибка при сохранении данных");
+        // }
+        // setSaving(false);
     }
 
     if (loading || !student) return <div>Загрузка данных...</div>;
@@ -87,8 +92,8 @@ export default function StudentEditPage() {
                         <label className="block font-semibold mb-1">Фамилия *</label>
                         <input
                             type="text"
-                            name="lastName"
-                            value={student.lastName}
+                            name="surname"
+                            value={student.surname}
                             onChange={handleChange}
                             required
                             className="w-full px-3 py-2 border rounded"
@@ -100,8 +105,8 @@ export default function StudentEditPage() {
                         <label className="block font-semibold mb-1">Имя *</label>
                         <input
                             type="text"
-                            name="firstName"
-                            value={student.firstName}
+                            name="name"
+                            value={student.name}
                             onChange={handleChange}
                             required
                             className="w-full px-3 py-2 border rounded"
@@ -140,9 +145,9 @@ export default function StudentEditPage() {
                     <div>
                         <label className="block font-semibold mb-1">Дата рождения *</label>
                         <input
-                            type="date"
-                            name="birthDate"
-                            value={student.birthDate}
+                            type="text"
+                            name="birthday"
+                            value={student.birthday}
                             onChange={handleChange}
                             required
                             className="w-full px-3 py-2 border rounded"
@@ -153,9 +158,9 @@ export default function StudentEditPage() {
                     <div>
                         <label className="block font-semibold mb-1">Номер телефона</label>
                         <input
-                            type="tel"
-                            name="phoneNumber"
-                            value={student.phoneNumber || ""}
+                            type="text"
+                            name="phone"
+                            value={student.phone || ""}
                             onChange={handleChange}
                             placeholder="+7 (___) ___-__-__"
                             className="w-full px-3 py-2 border rounded"
@@ -166,8 +171,8 @@ export default function StudentEditPage() {
                     <div>
                         <label className="block font-semibold mb-1">Адрес местожительства по прописке *</label>
                         <textarea
-                            name="registrationAddress"
-                            value={student.registrationAddress}
+                            name="regAddr"
+                            value={student.regAddr}
                             onChange={handleChange}
                             required
                             className="w-full px-3 py-2 border rounded"
@@ -179,8 +184,8 @@ export default function StudentEditPage() {
                     <div>
                         <label className="block font-semibold mb-1">Адрес места жительства (фактический) *</label>
                         <textarea
-                            name="residenceAddress"
-                            value={student.residenceAddress}
+                            name="actAddr"
+                            value={student.actAddr}
                             onChange={handleChange}
                             required
                             className="w-full px-3 py-2 border rounded"
@@ -193,8 +198,8 @@ export default function StudentEditPage() {
                         <label className="block font-semibold mb-1">Серия паспорта</label>
                         <input
                             type="text"
-                            name="passportSeries"
-                            value={student.passportSeries || ""}
+                            name="passportSerial"
+                            value={student.passportSerial || ""}
                             onChange={handleChange}
                             className="w-full px-3 py-2 border rounded"
                             maxLength={4}
@@ -219,9 +224,9 @@ export default function StudentEditPage() {
                     <div>
                         <label className="block font-semibold mb-1">Дата выдачи паспорта *</label>
                         <input
-                            type="date"
-                            name="passportIssueDate"
-                            value={student.passportIssueDate}
+                            type="text"
+                            name="passportDate"
+                            value={student.passportDate}
                             onChange={handleChange}
                             required
                             className="w-full px-3 py-2 border rounded"
@@ -233,8 +238,8 @@ export default function StudentEditPage() {
                         <label className="block font-semibold mb-1">Кем выдан паспорт *</label>
                         <input
                             type="text"
-                            name="passportIssuedBy"
-                            value={student.passportIssuedBy}
+                            name="passportSource"
+                            value={student.passportSource}
                             onChange={handleChange}
                             required
                             className="w-full px-3 py-2 border rounded"
@@ -259,44 +264,48 @@ export default function StudentEditPage() {
                         <label className="block font-semibold mb-1">Номер медицинского полиса</label>
                         <input
                             type="text"
-                            name="medicalPolicyNumber"
-                            value={student.medicalPolicyNumber || ""}
+                            name="medPolicy"
+                            value={student.medPolicy || ""}
                             onChange={handleChange}
                             className="w-full px-3 py-2 border rounded"
                         />
                     </div>
-
-                    {/* Иностранный гражданин */}
-                    <div className="flex items-center space-x-2">
-                        <input
-                            type="checkbox"
-                            name="foreignCitizen"
-                            checked={student.foreignCitizen}
+                    <div>
+                        <label className="block font-semibold mb-1">Иностранный гражданин</label>
+                        <select
+                            name="foreigner"
+                            value={student.foreigner}
                             onChange={handleChange}
-                            id="foreignCitizen"
-                        />
-                        <label htmlFor="foreignCitizen">Иностранный гражданин</label>
+                            required
+                            className="w-full px-3 py-2 border rounded"
+                        >
+                            <option value=""></option>
+                            <option value="Да">Да</option>
+                            <option value="Нет">Нет</option>
+                        </select>
                     </div>
-
-                    {/* Особая квота */}
-                    <div className="flex items-center space-x-2">
-                        <input
-                            type="checkbox"
-                            name="specialQuota"
-                            checked={student.specialQuota}
+                    <div>
+                        <label className="block font-semibold mb-1">Особая квота (инвалид, сирота)</label>
+                        <select
+                            name="quota"
+                            value={student.quota}
                             onChange={handleChange}
-                            id="specialQuota"
-                        />
-                        <label htmlFor="specialQuota">Особая квота (инвалид, сирота)</label>
+                            required
+                            className="w-full px-3 py-2 border rounded"
+                        >
+                            <option value="">Выберите есть ли квота</option>
+                            <option value="Да">Да</option>
+                            <option value="Нет">Нет</option>
+                        </select>
                     </div>
 
                     {/* Дата зачисления */}
                     <div>
                         <label className="block font-semibold mb-1">Дата зачисления *</label>
                         <input
-                            type="date"
-                            name="enrollmentDate"
-                            value={student.enrollmentDate}
+                            type="text"
+                            name="enrlDate"
+                            value={student.enrlDate}
                             onChange={handleChange}
                             required
                             className="w-full px-3 py-2 border rounded"
@@ -307,9 +316,9 @@ export default function StudentEditPage() {
                     <div>
                         <label className="block font-semibold mb-1">Дата приказа о зачислении *</label>
                         <input
-                            type="date"
-                            name="enrollmentOrderDate"
-                            value={student.enrollmentOrderDate}
+                            type="text"
+                            name="enrlOrderDate"
+                            value={student.enrlOrderDate}
                             onChange={handleChange}
                             required
                             className="w-full px-3 py-2 border rounded"
@@ -321,8 +330,8 @@ export default function StudentEditPage() {
                         <label className="block font-semibold mb-1">Номер приказа о зачислении *</label>
                         <input
                             type="text"
-                            name="enrollmentOrderNumber"
-                            value={student.enrollmentOrderNumber}
+                            name="enrlOrderNumber"
+                            value={student.enrlOrderNumber}
                             onChange={handleChange}
                             required
                             className="w-full px-3 py-2 border rounded"
@@ -334,8 +343,8 @@ export default function StudentEditPage() {
                         <label className="block font-semibold mb-1">Номер студенческого билета *</label>
                         <input
                             type="text"
-                            name="studentCardNumber"
-                            value={student.studentCardNumber}
+                            name="studId"
+                            value={student.studId}
                             onChange={handleChange}
                             required
                             className="w-full px-3 py-2 border rounded"
@@ -346,9 +355,9 @@ export default function StudentEditPage() {
                     <div>
                         <label className="block font-semibold mb-1">Дата выдачи студенческого билета *</label>
                         <input
-                            type="date"
-                            name="studentCardIssueDate"
-                            value={student.studentCardIssueDate}
+                            type="text"
+                            name="studIdDate"
+                            value={student.studIdDate}
                             onChange={handleChange}
                             required
                             className="w-full px-3 py-2 border rounded"
@@ -372,8 +381,8 @@ export default function StudentEditPage() {
                         <label className="block font-semibold mb-1">Наименование уровня образования *</label>
                         <input
                             type="text"
-                            name="educationLevelName"
-                            value={student.educationLevelName}
+                            name="educationLevel"
+                            value={student.educationLevel}
                             onChange={handleChange}
                             required
                             className="w-full px-3 py-2 border rounded"
@@ -385,8 +394,8 @@ export default function StudentEditPage() {
                         <label className="block font-semibold mb-1">Источник финансирования *</label>
                         <input
                             type="text"
-                            name="fundingSource"
-                            value={student.fundingSource}
+                            name="fundSrc"
+                            value={student.fundSrc}
                             onChange={handleChange}
                             required
                             className="w-full px-3 py-2 border rounded"
@@ -397,12 +406,12 @@ export default function StudentEditPage() {
                     <div>
                         <label className="block font-semibold mb-1">Номер курса *</label>
                         <input
-                            type="number"
-                            name="courseNumber"
-                            value={student.courseNumber}
+                            type="text"
+                            name="course"
+                            value={student.course}
                             onChange={handleChange}
                             required
-                            min={1}
+
                             className="w-full px-3 py-2 border rounded"
                         />
                     </div>
@@ -425,8 +434,8 @@ export default function StudentEditPage() {
                         <label className="block font-semibold mb-1">Наименование направления *</label>
                         <input
                             type="text"
-                            name="directionName"
-                            value={student.directionName}
+                            name="program"
+                            value={student.program}
                             onChange={handleChange}
                             required
                             className="w-full px-3 py-2 border rounded"
@@ -438,8 +447,8 @@ export default function StudentEditPage() {
                         <label className="block font-semibold mb-1">Код направления *</label>
                         <input
                             type="text"
-                            name="directionCode"
-                            value={student.directionCode}
+                            name="programCode"
+                            value={student.programCode}
                             onChange={handleChange}
                             required
                             className="w-full px-3 py-2 border rounded"
@@ -448,11 +457,12 @@ export default function StudentEditPage() {
 
                     {/* Наименование образовательной программы (Профиль) */}
                     <div>
-                        <label className="block font-semibold mb-1">Наименование образовательной программы (Профиль) *</label>
+                        <label className="block font-semibold mb-1">Наименование образовательной программы (Профиль)
+                            *</label>
                         <input
                             type="text"
-                            name="educationalProgramName"
-                            value={student.educationalProgramName}
+                            name="profile"
+                            value={student.profile}
                             onChange={handleChange}
                             required
                             className="w-full px-3 py-2 border rounded"
@@ -461,14 +471,14 @@ export default function StudentEditPage() {
 
                     {/* Срок реализации образовательной программы (кол-во месяцев) */}
                     <div>
-                        <label className="block font-semibold mb-1">Срок реализации образовательной программы (месяцев) *</label>
+                        <label className="block font-semibold mb-1">Срок реализации образовательной программы (месяцев)
+                            *</label>
                         <input
-                            type="number"
-                            name="programDurationMonths"
-                            value={student.programDurationMonths}
+                            type="text"
+                            name="duration"
+                            value={student.duration}
                             onChange={handleChange}
                             required
-                            min={1}
                             className="w-full px-3 py-2 border rounded"
                         />
                     </div>
@@ -477,9 +487,9 @@ export default function StudentEditPage() {
                     <div>
                         <label className="block font-semibold mb-1">Планируемая дата окончания обучения *</label>
                         <input
-                            type="date"
-                            name="plannedGraduationDate"
-                            value={student.plannedGraduationDate}
+                            type="text"
+                            name="regEndDate"
+                            value={student.regEndDate}
                             onChange={handleChange}
                             required
                             className="w-full px-3 py-2 border rounded"
@@ -490,9 +500,9 @@ export default function StudentEditPage() {
                     <div>
                         <label className="block font-semibold mb-1">Дата завершения обучения или отчисления</label>
                         <input
-                            type="date"
-                            name="graduationOrExpulsionDate"
-                            value={student.graduationOrExpulsionDate || ""}
+                            type="text"
+                            name="actEndDate"
+                            value={student.actEndDate || ""}
                             onChange={handleChange}
                             className="w-full px-3 py-2 border rounded"
                         />
@@ -500,11 +510,12 @@ export default function StudentEditPage() {
 
                     {/* Дата приказа о завершении обучения или отчислении */}
                     <div>
-                        <label className="block font-semibold mb-1">Дата приказа о завершении обучения или отчислении</label>
+                        <label className="block font-semibold mb-1">Дата приказа о завершении обучения или
+                            отчислении</label>
                         <input
-                            type="date"
-                            name="graduationOrExpulsionOrderDate"
-                            value={student.graduationOrExpulsionOrderDate || ""}
+                            type="text"
+                            name="orderEndDate"
+                            value={student.orderEndDate || ""}
                             onChange={handleChange}
                             className="w-full px-3 py-2 border rounded"
                         />
@@ -512,11 +523,12 @@ export default function StudentEditPage() {
 
                     {/* Номер приказа о завершении обучения или отчислении */}
                     <div>
-                        <label className="block font-semibold mb-1">Номер приказа о завершении обучения или отчислении</label>
+                        <label className="block font-semibold mb-1">Номер приказа о завершении обучения или
+                            отчислении</label>
                         <input
                             type="text"
-                            name="graduationOrExpulsionOrderNumber"
-                            value={student.graduationOrExpulsionOrderNumber || ""}
+                            name="orderEndNumber"
+                            value={student.orderEndNumber || ""}
                             onChange={handleChange}
                             className="w-full px-3 py-2 border rounded"
                         />
@@ -526,9 +538,9 @@ export default function StudentEditPage() {
                     <div>
                         <label className="block font-semibold mb-1">Дата начала академического отпуска</label>
                         <input
-                            type="date"
-                            name="academicLeaveStartDate"
-                            value={student.academicLeaveStartDate || ""}
+                            type="text"
+                            name="acadStartDate"
+                            value={student.acadStartDate || ""}
                             onChange={handleChange}
                             className="w-full px-3 py-2 border rounded"
                         />
@@ -538,9 +550,9 @@ export default function StudentEditPage() {
                     <div>
                         <label className="block font-semibold mb-1">Дата окончания академического отпуска</label>
                         <input
-                            type="date"
-                            name="academicLeaveEndDate"
-                            value={student.academicLeaveEndDate || ""}
+                            type="text"
+                            name="acadEndDate"
+                            value={student.acadEndDate || ""}
                             onChange={handleChange}
                             className="w-full px-3 py-2 border rounded"
                         />
@@ -548,11 +560,12 @@ export default function StudentEditPage() {
 
                     {/* Дата приказа о предоставлении академического отпуска */}
                     <div>
-                        <label className="block font-semibold mb-1">Дата приказа о предоставлении академического отпуска</label>
+                        <label className="block font-semibold mb-1">Дата приказа о предоставлении академического
+                            отпуска</label>
                         <input
-                            type="date"
-                            name="academicLeaveOrderDate"
-                            value={student.academicLeaveOrderDate || ""}
+                            type="text"
+                            name="orderAcadDate"
+                            value={student.orderAcadDate || ""}
                             onChange={handleChange}
                             className="w-full px-3 py-2 border rounded"
                         />
@@ -560,11 +573,12 @@ export default function StudentEditPage() {
 
                     {/* Номер приказа о предоставлении академического отпуска */}
                     <div>
-                        <label className="block font-semibold mb-1">Номер приказа о предоставлении академического отпуска</label>
+                        <label className="block font-semibold mb-1">Номер приказа о предоставлении академического
+                            отпуска</label>
                         <input
                             type="text"
-                            name="academicLeaveOrderNumber"
-                            value={student.academicLeaveOrderNumber || ""}
+                            name="orderAcadNumber"
+                            value={student.orderAcadNumber || ""}
                             onChange={handleChange}
                             className="w-full px-3 py-2 border rounded"
                         />
