@@ -22,6 +22,9 @@ spring:
     locations: classpath:db/migration
     baseline-on-migrate: true
   management:
-    endpoint:
+    endpoints:
+      web:
+        exposure:
+          include: health
       health:
         show-details: always
