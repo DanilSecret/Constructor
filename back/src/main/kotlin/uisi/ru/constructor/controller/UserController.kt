@@ -1,5 +1,6 @@
 package uisi.ru.constructor.controller
 
+import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -47,7 +48,6 @@ class UserController(
     }
 
     @PostMapping("/listStudents")
-//    fun getStudents(@RequestBody filter: MapRequest): ResponseEntity<Any> {
     fun getStudents(@RequestBody filter: ListStudentsRequest): ResponseEntity<Any> {
         val filterMap: List<Map<String, String?>> = listOf(
             mapOf("Фамилия" to filter.search),
@@ -63,42 +63,53 @@ class UserController(
     }
 
     @PutMapping("/update")
-    fun updStudent(@RequestBody rawStudentUpdate: MapRequest): ResponseEntity<Any> {
+    fun updStudent(@RequestBody rawStudentUpdate: Map<String, MapStudent>): ResponseEntity<Any> {
         val formatter = SimpleDateFormat("dd.MM.yyyy")
 
-        val studentMap = rawStudentUpdate.map.map { (key, value) ->
-            val parsedValue = when (value?.lowercase()?.trim()) {
-                "да" -> true
-                "нет" -> false
-                "true" -> true
-                "false" -> false
-                else -> {
-                    formatter.isLenient = false
-                    try {
-                        formatter.parse(value?.trim())
-                    }
-                    catch (e: Exception){
-                        if (key == "course") {
-                            value?.trim()?.toInt()?.toShort()
+        val mapper = ObjectMapper()
+
+        try{
+            val studentMap: Map<String, String?> = mapper.convertValue(rawStudentUpdate["student"], object : TypeReference<Map<String, String?>>() {})
+
+            val studentMapParsed = studentMap.map { (key, value) ->
+                val parsedValue = when (value?.lowercase()?.trim()) {
+                    "да" -> true
+                    "нет" -> false
+                    "true" -> true
+                    "false" -> false
+                    else -> {
+                        formatter.isLenient = false
+                        try {
+                            formatter.parse(value?.trim())
                         }
-                        else if (key == "duration") {
-                            value?.trim()?.toInt()
+                        catch (e: Exception){
+                            if (key == "course") {
+                                value?.trim()?.toInt()?.toShort()
+                            }
+                            else if (key == "duration") {
+                                value?.trim()?.toInt()
+                            }
+                            else if (key == "uuid") {
+                                UUID.fromString(value)
+                            }
+                            else value?.trim()
                         }
-                        else value?.trim()
                     }
                 }
+                key to parsedValue
+            }.toMap()
+
+            if (!(studentMapParsed.containsKey("studId")&&studentMapParsed.containsKey("enrlOrderNumber"))) {
+                return ResponseEntity.badRequest().body(ResponseMessage("Поля 'Номер студенческого билета' и 'Номер приказа о зачислении' обязательны"))
             }
-            key to parsedValue
-        }.toMap()
 
-        if (!(studentMap.containsKey("studId")&&studentMap.containsKey("enrlOrderNumber"))) {
-            return ResponseEntity.badRequest().body(ResponseMessage("Поля 'Номер студенческого билета' и 'Номер приказа о зачислении' обязательны"))
-        }
-
-        val mapper = ObjectMapper()
-        try{
-            val studentUpdate: StudentUpdate = mapper.convertValue(studentMap, StudentUpdate::class.java)
-            return studentsService.updateStudent(studentUpdate)
+            try{
+                val studentUpdate: StudentUpdate = mapper.convertValue(studentMapParsed, StudentUpdate::class.java)
+                return studentsService.updateStudent(studentUpdate)
+            }
+            catch (e: Exception) {
+                return ResponseEntity.internalServerError().body(ResponseMessage(e.message.toString(),false))
+            }
         }
         catch (e: Exception) {
             return ResponseEntity.internalServerError().body(ResponseMessage(e.message.toString(),false))
