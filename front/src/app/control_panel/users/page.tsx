@@ -45,6 +45,19 @@ export default function UserManagementPage() {
         setFilteredUsers(filtered);
     }, [search, users]);
 
+    function translateRole(role: string): string {
+        switch (role) {
+            case "ADMIN":
+                return "Администратор";
+            case "DEANERY":
+                return "Декан";
+            case "METHODIST":
+                return "Методист";
+            default:
+                return role;
+        }
+    }
+
 
     async function loadUsers() {
         const res = await getAllUsers();
@@ -118,7 +131,7 @@ export default function UserManagementPage() {
                                             <tr key={user.uuid} className="text-sm hover:bg-[#F0F5FA]">
                                                 <td className="px-4 py-2 border-b text-center">{index + 1}</td>
                                                 <td className="px-4 py-2 border-b">{user.email}</td>
-                                                <td className="px-4 py-2 border-b">{user.role}</td>
+                                                <td className="px-4 py-2 border-b">{translateRole(user.role)}</td>
                                                 <td className="px-4 py-2 border-b w-60">
                                                     <div className="flex justify-center gap-x-2">
                                                         <button
