@@ -49,7 +49,7 @@ export default function Login_form() {
     };
 
     return (
-        <div className="bg-[#F5F7FA] h-screen flex flex-col">
+        <div className="min-h-screen bg-[#F5F7FA] text-black flex flex-col">
             <div className="flex-1 flex justify-center items-center px-4 md:px-0">
                 <form onSubmit={handleSubmit(onSubmit)}
                       className="w-full max-w-sm bg-white border border-[#D5D8DC] rounded-[10px] shadow-md overflow-hidden flex flex-col">
