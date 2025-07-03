@@ -1,5 +1,5 @@
 package uisi.ru.constructor.model
 
-data class UserDelete(
+data class UUIDRequest(
     val uuid: String
 )

@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.multipart.MultipartFile
 import uisi.ru.constructor.model.*
-import uisi.ru.constructor.repository.HistoryRepository
 import uisi.ru.constructor.service.HistoryService
 import uisi.ru.constructor.service.StudentService
 import uisi.ru.constructor.service.UserService
@@ -45,7 +44,7 @@ class UserController(
     }
 
     @PostMapping("/selfHistory")
-    fun getHistory(@RequestBody request: SelfHistoryRequest): ResponseEntity<Any> {
+    fun getHistory(@RequestBody request: UUIDRequest): ResponseEntity<Any> {
         return historyService.getSelfHistory(UUID.fromString(request.uuid))
     }
 

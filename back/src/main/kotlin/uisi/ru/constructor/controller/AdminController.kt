@@ -13,6 +13,7 @@ import uisi.ru.constructor.model.*
 import uisi.ru.constructor.service.HistoryService
 import uisi.ru.constructor.service.StudentService
 import uisi.ru.constructor.service.UserService
+import java.util.*
 
 @RestController
 @RequestMapping("/api/admin")
@@ -37,8 +38,13 @@ class AdminController(
         return userService.getAllUsers()
     }
 
+    @PostMapping("/getUser")
+    fun getUser(@RequestBody uuid: UUIDRequest): ResponseEntity<Any> {
+        return userService.getUser(UUID.fromString(uuid.uuid))
+    }
+
     @DeleteMapping("/delete")
-    fun deleteUser(@RequestBody userDelete: UserDelete): ResponseEntity<Any> {
+    fun deleteUser(@RequestBody userDelete: UUIDRequest): ResponseEntity<Any> {
         return userService.deleteUser(userDelete)
     }
 
