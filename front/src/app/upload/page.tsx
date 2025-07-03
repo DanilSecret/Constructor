@@ -79,7 +79,7 @@ export default function FileUploadPage() {
     }
 
     return (
-        <div className="bg-[#F5F7FA] h-screen flex flex-col">
+        <div className="bg-[#F5F7FA] min-h-screen flex flex-col">
             <Header/>
             <div className="flex-1 flex flex-col justify-center items-center">
                 <div className="flex-1 flex justify-center items-center px-4 md:px-0">
