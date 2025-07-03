@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import React, { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useUserStore } from "@/store/store";
 import Header from "@/app/components/Header";
@@ -8,6 +8,8 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import {CreateUser} from "@/app/Api/Api";
+import Image from "next/image";
+import Link from "next/link";
 
 const roles = ["ADMIN", "DEANERY", "METHODIST"] as const;
 
@@ -75,7 +77,17 @@ export default function CreateUserPage() {
             <div className="flex-1 flex justify-center items-start px-6 py-20">
                 <div
                     className="w-full max-w-3xl p-9 rounded-[10px] shadow-md bg-white border border-[#D5D8DC] flex flex-col mx-auto">
-
+                    <Link
+                        href="/control_panel/users"
+                        className="text-sm text-blue-600 hover:underlinee"
+                    >
+                        <Image
+                            src="/Back.svg"
+                            alt="Назад"
+                            width={30}
+                            height={30}
+                        />
+                    </Link>
                     <h1 className="text-2xl font-bold text-[#34495E] mb-6">Добавление пользователя</h1>
 
                     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
@@ -133,7 +145,7 @@ export default function CreateUserPage() {
                         <button
                             type="submit"
                             disabled={isSubmitting}
-                            className="w-full bg-[#3498DB] hover:bg-[#2F89C5] text-white px-4 py-3 rounded shadow disabled:opacity-50 transition"
+                            className="w-full bg-[#3498DB] hover:bg-[#2F89C5] text-white px-4 py-3 rounded shadow disabled:opacity-50 transition cursor-pointer"
                         >
                             Создать пользователя
                         </button>

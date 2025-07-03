@@ -53,7 +53,7 @@ export default function AddFilterPage() {
             <div className="bg-white rounded-lg shadow p-5 w-full max-w-4xl my-20 border border-[#D5D8DC]">
                 <div className="w-full relative flex items-center mb-10">
                 <h2 className="text-xl text-[#2f3a4c] absolute left-1/2 transform -translate-x-1/2">Добавить фильтр</h2>
-                <div className="absolute right-0 top-1/2 -translate-y-1/2 group cursor-pointer">
+                <div className="absolute right-0 top-1/2 -translate-y-1/2 group cursor-help">
                     <Image
                         src="/Question.svg"
                         alt="Вопрос"
@@ -85,7 +85,7 @@ export default function AddFilterPage() {
                     <button
                         type="button"
                         onClick={() => router.push("/editor")}
-                        className="px-4 py-2 border border-gray-400 rounded hover:bg-gray-100 text-black"
+                        className="px-4 py-2 border border-gray-400 rounded hover:bg-gray-100 text-black cursor-pointer"
                     >
                         Отмена
                     </button>
@@ -93,7 +93,7 @@ export default function AddFilterPage() {
                     <button
                         type="button"
                         onClick={handleSave}
-                        className="px-4 py-2 bg-[#3498DB] hover:bg-[#2F89C5] transition text-white rounded"
+                        className="px-4 py-2 bg-[#3498DB] hover:bg-[#2F89C5] transition text-white rounded cursor-pointer"
                     >
                         Сохранить фильтр
                     </button>
