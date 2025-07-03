@@ -229,6 +229,6 @@ export async function updateStudentByUUID(student: StudentFull) {
             { withCredentials: true});
         return { success: true, result: response.data, message: "Успешно", };
     } catch (err) {
-        return handleAxiosError(err, "удалении пользователя");
+        return handleAxiosError(err, "изменении пользователя");
     }
 }

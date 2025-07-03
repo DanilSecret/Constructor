@@ -1,10 +1,7 @@
 package uisi.ru.constructor.builders
 
 import jakarta.persistence.EntityManager
-import jakarta.persistence.PersistenceContext
 import org.apache.poi.xssf.usermodel.XSSFWorkbook
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.stereotype.Component
 import uisi.ru.constructor.model.Student
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -107,7 +104,7 @@ class ReportDocBuilder(
         val queryColumns: List<String> = columns.mapNotNull { tableColumns[it] }
         val queryFilter: Map<String, Any?> = filter.map { (key, value: String?) ->
             tableColumns[key]?: throw RuntimeException("Неверно задано название столбца: $key")
-            val parsedValue = when (value?.toLowerCase()?.trim()) {
+            val parsedValue = when (value?.lowercase()?.trim()) {
                 "да" -> true
                 "нет" -> false
                 "true" -> true
@@ -139,7 +136,12 @@ class ReportDocBuilder(
         cq.multiselect(selections)
 
         val predicates = queryFilter.mapNotNull { (column, value) ->
-            root.get<String>(column)?.let { cb.equal(it, value) }
+            root.get<String>(column)?.let {
+                when(value) {
+                    is String -> cb.like(cb.lower(it), "%${value.lowercase()}%")
+                    else -> cb.equal(it, value.toString())
+                }
+            }
         }
         cq.where(*predicates.toTypedArray())
 
