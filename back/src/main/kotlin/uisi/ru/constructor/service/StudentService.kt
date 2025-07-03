@@ -1,5 +1,6 @@
 package uisi.ru.constructor.service
 
+import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.ObjectMapper
 import jakarta.persistence.EntityManager
 import org.apache.poi.xssf.usermodel.XSSFWorkbook
@@ -138,7 +139,7 @@ class StudentService(
 
             val mapper = ObjectMapper()
             val rawStudents = studentRepository.findAll().mapNotNull { student: Student ->
-                mapper.convertValue(student, Map::class.java) as Map<String, Any?>
+                mapper.convertValue(student, object : TypeReference<Map<String, Any?>>() {})
             }
             val formatter = SimpleDateFormat("dd.MM.yyyy")
             val students = rawStudents.map { student: Map<String, Any?> ->
@@ -179,7 +180,7 @@ class StudentService(
         val rawStudent = studentRepository.getStudentByUuid(uuid)?: return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ResponseMessage("Студента не найдено", false))
         val mapper = ObjectMapper()
 
-        val student = mapper.convertValue(rawStudent, Map::class.java) as Map<String, Any?>
+        val student = mapper.convertValue(rawStudent, object : TypeReference<Map<String, Any?>>() {})
 
         val parsedStudent = student.map { (key,value) ->
             val stringValue = when (value) {
