@@ -106,3 +106,20 @@ export async function ReportsHistory(uuid: string | undefined) {
         return handleAxiosError(err, "получении истории");
     }
 }
+
+export async function ReportsFullHistory() {
+
+    try {
+        const response = await axios.get(
+            "http://localhost:8080/api/user/allHistory",
+            { withCredentials: true }
+        );
+        return {
+            success: true,
+            data: response.data,
+            message: "Успешно",
+        };
+    } catch (err) {
+        return handleAxiosError(err, "получении истории");
+    }
+}

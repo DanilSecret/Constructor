@@ -31,7 +31,8 @@ export default function Header() {
                         <Link href="/upload" className="hover:underline">Загрузить файл</Link>
                         <Link href="/columns" className="hover:underline">Создать отчет</Link>
                         <Link href="/history" className="hover:underline">История отчетов</Link>
-                        <Link href="/control_panel" className="hover:underline">История отчетов</Link>
+                        <Link href="/search" className="hover:underline">Поиск студентов</Link>
+                        <Link href="/control_panel" className="hover:underline">Панель управления</Link>
                     </nav>
                 </div>
                 <div className="flex items-center gap-6 text-sm">
