@@ -95,7 +95,7 @@ export default function FileUploadPage() {
                                 onDragOver={onDragOver}
                                 onDragLeave={onDragLeave}
                                 onDrop={onDrop}
-                                className={`cursor-pointer flex flex-col items-center justify-center border-2 border-dashed rounded-lg pt-2 pb-8 px-4 transition-colors duration-200
+                                className={` cursor-pointer flex flex-col items-center justify-center border-2 border-dashed rounded-lg pt-2 pb-8 px-4 transition-colors duration-200
     ${
                                     isDragActive
                                         ? "border-blue-600 bg-blue-100"

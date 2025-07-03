@@ -77,9 +77,8 @@ export default function HomePage() {
                     Здесь вы можете загрузить файл с данными, выбрать нужные колонки и получить готовый отчёт.
                 </p>
 
-                {/* Слайдер */}
                 <div className="relative w-full max-w-3xl mx-auto mb-10">
-                    {/* Кнопки прокрутки вне контейнера с карточками */}
+
                     <button
                         onClick={() => scrollSlider('left')}
                         className="absolute left-[-40px] top-1/2 -translate-y-1/2 shadow-md p-2 rounded-full bg-[#3498DB] hover:bg-[#2F89C5] z-10"
@@ -93,7 +92,6 @@ export default function HomePage() {
                         ▶
                     </button>
 
-                    {/* Контейнер с карточками */}
                     <div className="overflow-hidden rounded-lg ">
                         <div
                             ref={sliderRef}
@@ -118,11 +116,9 @@ export default function HomePage() {
                     </div>
                 </div>
 
-                {/* Инструкция */}
                 <div className="bg-white rounded-xl shadow-lg p-6 max-w-4xl w-full text-[#34495E] border border-[#D5D8DC]">
                     <h2 className="text-2xl font-bold mb-6">📘 Пошаговая инструкция</h2>
 
-                    {/* Часть 1 */}
                     <div className="mb-6">
                         <h3 className="text-xl font-semibold mb-2">🔹 Часть 1: Загрузка файла</h3>
                         <ol className="list-decimal list-inside space-y-3">
@@ -135,7 +131,6 @@ export default function HomePage() {
                         </ol>
                     </div>
 
-                    {/* Часть 2 */}
                     <div>
                         <h3 className="text-xl font-semibold mb-2">🔹 Часть 2: Создание отчёта</h3>
                         <ol className="list-decimal list-inside space-y-3">

@@ -35,7 +35,6 @@ export default function AddJoinPage() {
             return;
         }
 
-        // Сохраняем новое соединение
         addJoin(selected);
         router.push("/editor");
     }
