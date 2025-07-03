@@ -238,7 +238,7 @@ class StudentService(
             "orderAcadDate" to "Дата приказа о предоставлении академического отпуска (при наличии)",
             "orderAcadNumber" to "Номер приказа о предоставлении академического отпуска (при наличии)"
         )
-        val cols = tableColumnsRev.keys.toList()
+        val cols = tableColumnsRev.values.toList()
 
         if (filter == null) {
 
@@ -249,14 +249,13 @@ class StudentService(
             val formatter = SimpleDateFormat("dd.MM.yyyy")
             val students = rawStudents.mapNotNull { student: Map<String, Any?> ->
                 student.map{ (key, value) ->
-                    val newKey = tableColumnsRev[key]?: return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ResponseMessage("Ошибка при получении данных:\nСтолбцу $key не соответствует ни 1 описание", false))
                     val stringValue = when (value) {
                         is Date -> formatter.format(value)
                         is Boolean -> if (value) "Да" else "Нет"
                         else -> value?.toString()
                     }
-                    newKey to stringValue
-                }.toMap().filterKeys { it == "uuid"|| it == "Имя" || it == "Фамилия" || it == "Отчество (при наличии)" || it == "Группа (при наличии)" }
+                    key to stringValue
+                }.toMap().filterKeys { it == "uuid"|| it == "name" || it == "surname" || it == "patronymic" || it == "group" }
             }
             return ResponseEntity.ok().body(students)
         }
@@ -265,7 +264,18 @@ class StudentService(
                 builder.addFilterGroup(cols, it)
             }
             val students = builder.data.map { student: Map<String, String?> ->
-                student.filterKeys { it == "uuid"|| it == "Имя" || it == "Фамилия" || it == "Отчество (при наличии)" || it == "Группа (при наличии)" }
+                student.filterKeys { it == "uuid"|| it == "Имя" || it == "Фамилия" || it == "Отчество (при наличии)" || it == "Группа (при наличии)" }.map {
+                    (key,value) ->
+                    val newKey = when(key) {
+                        "uuid" -> "uuid"
+                        "Имя" -> "name"
+                        "Фамилия" -> "surname"
+                        "Отчество (при наличии)" -> "patronymic"
+                        "Группа (при наличии)" -> "group"
+                        else -> return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ResponseMessage("Не удалось преобразовать столбцы", false))
+                    }
+                    newKey to value
+                }.toMap()
             }
             return ResponseEntity.ok().body(students)
         }
@@ -278,57 +288,13 @@ class StudentService(
 
         val student = mapper.convertValue(rawStudent, Map::class.java) as Map<String, Any?>
 
-
-        val tableColumnsRev: Map<String, String> = mapOf(
-            "uuid" to "uuid",
-            "surname" to "Фамилия",
-            "name" to "Имя",
-            "patronymic" to "Отчество (при наличии)",
-            "gender" to "Пол",
-            "birthday" to "Дата рождения",
-            "phone" to "Номер телефона (при наличии)",
-            "regAddr" to "Адрес местожительства по прописке",
-            "actAddr" to "Адрес места жительства (фактический)",
-            "passportSerial" to "Серия паспорта (при наличии)",
-            "passportNumber" to "Номер паспорта",
-            "passportDate" to "Дата выдачи паспорта",
-            "passportSource" to "Кем выдан паспорт",
-            "snils" to "СНИЛС (при наличии)",
-            "medPolicy" to "Номер медицинского полиса (при наличии)",
-            "foreigner" to "Иностранный гражданин",
-            "quota" to "Особая квота (инвалид сирота)",
-            "enrlDate" to "Дата зачисления в образовательную организацию",
-            "enrlOrderDate" to "Дата приказа о зачислении",
-            "enrlOrderNumber" to "Номер приказа о зачислении",
-            "studId" to "Номер студенческого билета",
-            "studIdDate" to "Дата выдачи студенческого билета",
-            "group" to "Группа (при наличии)",
-            "educationLevel" to "Наименование уровня образования",
-            "fundSrc" to "Источник финансирования",
-            "course" to "Номер курса",
-            "studyForm" to "Форма обучения",
-            "program" to "Наименование направления",
-            "programCode" to "Код направления",
-            "profile" to "Наименование образовательной программы (Профиль)",
-            "duration" to "Срок реализации образовательной программы (кол-во месяцев)",
-            "regEndDate" to "Планируемая дата окончания обучения",
-            "actEndDate" to "Дата завершения обучения или отчисления (при наличии)",
-            "orderEndDate" to "Дата приказа о завершении обучения или отчислении (при наличии)",
-            "orderEndNumber" to "Номер приказа о завершении обучения или отчислении (при наличии)",
-            "acadStartDate" to "Дата начала академического отпуска (при наличии)",
-            "acadEndDate" to "Дата окончания академического отпуска (при наличии)",
-            "orderAcadDate" to "Дата приказа о предоставлении академического отпуска (при наличии)",
-            "orderAcadNumber" to "Номер приказа о предоставлении академического отпуска (при наличии)"
-        )
-
         val parsedStudent = student.map { (key,value) ->
-            val newKey = tableColumnsRev[key]?: return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ResponseMessage("Ошибка при получении данных:\nСтолбцу $key не соответствует ни 1 описание", false))
             val stringValue = when (value) {
                 is Date -> formatter.format(value)
                 is Boolean -> if (value) "Да" else "Нет"
                 else -> value?.toString()
             }
-            newKey to stringValue
+            key to stringValue
         }.toMap()
         return ResponseEntity.ok().body(parsedStudent)
     }
