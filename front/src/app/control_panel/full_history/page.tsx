@@ -15,6 +15,7 @@ export default function ReportFullHistory() {
     const [message, setMessage] = useState<string | null>(null);
 
     const userUUID = useUserStore((state) => state.userData?.uuid);
+    const userData = useUserStore((state) => state.userData);
     const isAuth = useUserStore((state) => state.isAuth);
     const { setSelectedColumns } = useColumnsStore();
     const { setFilters, setJoins } = useFilterJoinStore();
@@ -28,7 +29,10 @@ export default function ReportFullHistory() {
             router.push("/sign_in/");
             return;
         }
-
+        if (userData?.role !== "ADMIN" && userData?.role !== "DEANERY") {
+            alert("Недостаточно прав для доступа к панели управления.");
+            router.push("/");
+        }
         const loadReports = async () => {
             const result = await ReportsFullHistory();
             console.log(result)
@@ -42,7 +46,7 @@ export default function ReportFullHistory() {
         };
 
         loadReports();
-    }, [hydrated, isAuth, router, userUUID]);
+    }, [hydrated, isAuth, router, userData?.role, userUUID]);
 
     return (
         <div className="min-h-screen bg-[#F5F7FA] text-black">

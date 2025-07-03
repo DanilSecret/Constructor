@@ -18,4 +18,12 @@ export interface ReportEntry {
     filter: Record<string, string>[];
     joins: string[][];
     date: string;
-};
+}
+export interface User {
+    uuid: string;
+    email: string;
+    role: string;
+}
+
+
+

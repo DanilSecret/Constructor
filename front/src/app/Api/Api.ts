@@ -123,3 +123,70 @@ export async function ReportsFullHistory() {
         return handleAxiosError(err, "получении истории");
     }
 }
+
+export async function getAllUsers() {
+    try {
+        const response = await axios.get(
+            "http://localhost:8080/api/admin/listUsers",
+            { withCredentials: true }
+        );
+        return { success: true, data: response.data, message: "Успешно",};
+    } catch (err) {
+        return handleAxiosError(err, "получении пользователей")
+    }
+}
+
+export async function getUserByUUID(uuid:string ) {
+    try {
+        const response = await axios.post(
+            "http://localhost:8080/api/admin/getUser",
+            { uuid },
+            { withCredentials: true}
+        );
+        return { success: true, data: response.data, message: "Успешно",};
+    } catch (err) {
+        return handleAxiosError(err, "получении пользователей")
+    }
+}
+export async function updateUserByUUID(uuid:string, email: string, password: string, role: string ) {
+    try {
+        const response = await axios.put(
+            "http://localhost:8080/api/admin/update",
+            { uuid, email, password, role },
+            { withCredentials: true}
+        );
+        return { success: true, data: response.data, message: "Успешно",};
+    } catch (err) {
+        return handleAxiosError(err, "изменении пользователей")
+    }
+}
+
+export async function CreateUser(email: string, password: string, role: string ) {
+    try {
+        const response = await axios.post(
+            "http://localhost:8080/api/admin/register",
+            { email, password, role },
+            { withCredentials: true}
+        );
+        return { success: true, data: response.data, message: "Успешно",};
+    } catch (err) {
+        return handleAxiosError(err, "получении пользователей")
+    }
+}
+
+
+export async function deleteUserByUUID(uuid: string) {
+    try {
+        const response = await axios.delete("http://localhost:8080/api/admin/delete", {
+            data: { uuid },
+            withCredentials: true,
+        });
+        return {
+            success: true,
+            data: response.data,
+            message: "Успешно",
+        };
+    } catch (err) {
+        return handleAxiosError(err, "удалении пользователя");
+    }
+}
