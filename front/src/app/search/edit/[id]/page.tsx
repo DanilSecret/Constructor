@@ -27,7 +27,7 @@ export default function StudentEditPage() {
 
         if (!params.id) {
             alert("UUID студента не указан");
-            router.push("/control_panel/students");
+            router.push("/search");
             return;
         }
 
@@ -37,8 +37,8 @@ export default function StudentEditPage() {
             if (res.success && res.result) {
                 setStudent(res.result);
             } else {
-                // alert("Ошибка загрузки данных студента");
-                // router.push("");
+                alert("Ошибка загрузки данных студента");
+                router.push("/search");
             }
             setLoading(false);
         }
@@ -62,20 +62,19 @@ export default function StudentEditPage() {
     }
 
 
-    async function handleSave() {
-        console.log(student)
-        // e.preventDefault();
-        // if (!student) return;
-        //
-        // setSaving(true);
-        // const res = await updateStudentByUUID(student.uuid, student);
-        // if (res.success) {
-        //     alert("Данные успешно сохранены");
-        //     router.push("/search/");
-        // } else {
-        //     alert("Ошибка при сохранении данных");
-        // }
-        // setSaving(false);
+    async function handleSave(e: React.FormEvent<HTMLFormElement>) {
+        e.preventDefault();
+        if (!student) return;
+
+        setSaving(true);
+        const res = await updateStudentByUUID(student);
+        if (res.success) {
+            alert("Данные успешно сохранены");
+            router.push("/search/");
+        } else {
+            alert("Ошибка при сохранении данных");
+        }
+        setSaving(false);
     }
 
     if (loading || !student) return <div>Загрузка данных...</div>;

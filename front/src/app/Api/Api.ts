@@ -1,6 +1,6 @@
 
 import axios, { AxiosError } from "axios";
-import {Columns} from "@/app/models/models";
+import {Columns, StudentFull} from "@/app/models/models";
 import {handleAxiosError} from "@/app/Api/handleAxiosError";
 import {Filter} from "@/store/filter_joins_store";
 
@@ -208,7 +208,6 @@ export async function searchStudents( search: string ) {
 
 export async function GetStudentById( uuid: string ) {
     try {
-        console.log(uuid)
         const response = await axios.post(
             `http://localhost:8080/api/user/getStudent`, { uuid },
             { withCredentials: true});
@@ -217,6 +216,18 @@ export async function GetStudentById( uuid: string ) {
             result: response.data,
             message: "Успешно",
         };
+    } catch (err) {
+        return handleAxiosError(err, "удалении пользователя");
+    }
+}
+
+export async function updateStudentByUUID(student: StudentFull) {
+    try {
+        const response = await axios.put(
+            "http://localhost:8080/api/user/update",
+            { student },
+            { withCredentials: true});
+        return { success: true, result: response.data, message: "Успешно", };
     } catch (err) {
         return handleAxiosError(err, "удалении пользователя");
     }
