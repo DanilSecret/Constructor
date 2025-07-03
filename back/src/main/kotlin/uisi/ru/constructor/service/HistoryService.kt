@@ -33,7 +33,17 @@ class HistoryService(
 
     fun getAllHistory(): ResponseEntity<Any> {
         try {
-            val history = historyRepository.findAll()
+            val rawHistory = historyRepository.findAll()
+            val history = rawHistory.mapNotNull { h: History ->
+                HistoryResponse(
+                    uuid = h.uuid.toString(),
+                    email = h.user.email,
+                    col = h.request.col,
+                    filter = h.request.filter,
+                    joins = h.request.joins,
+                    date = h.date
+                )
+            }
             return ResponseEntity.ok().body(history)
         }
         catch (e: Exception){
