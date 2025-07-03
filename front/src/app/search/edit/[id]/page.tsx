@@ -6,6 +6,8 @@ import { useUserStore } from "@/store/store";
 import Header from "@/app/components/Header";
 import { StudentFull } from "@/app/models/models";
 import {GetStudentById, updateStudentByUUID} from "@/app/Api/Api";
+import Link from "next/link";
+import Image from "next/image";
 
 export default function StudentEditPage() {
     const router = useRouter();
@@ -82,12 +84,30 @@ export default function StudentEditPage() {
     return (
         <div className="min-h-screen bg-[#F5F7FA] text-black">
             <Header />
-            <div className="max-w-screen-xl mx-auto py-10 px-4">
-                <h1 className="text-2xl font-bold mb-6">Редактирование студента</h1>
+            <div className="flex-1 flex justify-center items-start px-6 py-20">
+                <div className="w-full max-w-4xl p-9 rounded-[10px] shadow-md bg-white border border-[#D5D8DC] flex flex-col mx-auto relative">
 
-                <form onSubmit={handleSave} className="space-y-4 max-w-4xl">
-                    {/* Фамилия */}
-                    <div>
+                    <div className="w-full relative mb-8 flex items-center">
+                        <div className="flex-none">
+                            <Link href="/search" className="text-sm text-blue-600 hover:underline flex items-center">
+                                <Image src="/Back.svg" alt="Назад" width={30} height={30} />
+                            </Link>
+                        </div>
+                        <h1 className="text-2xl font-bold text-[#34495E] absolute left-1/2 transform -translate-x-1/2">
+                            Редактирование студента
+                        </h1>
+                        <div className="absolute right-0 group cursor-help">
+                            <Image src="/Question.svg" alt="Вопрос" width={30} height={30} />
+                            <div className="absolute top-full right-0 mt-1 w-64 p-2 bg-gray-100 border rounded shadow text-sm text-black hidden group-hover:block z-10">
+                                Здесь редактируются данные студента.<br />
+                                Даты вводите в формате дд.мм.гггг.
+                            </div>
+                        </div>
+                    </div>
+
+                    <form onSubmit={handleSave} className="space-y-4 max-w-4xl">
+                        {/* Фамилия */}
+                        <div>
                         <label className="block font-semibold mb-1">Фамилия *</label>
                         <input
                             type="text"
@@ -583,14 +603,17 @@ export default function StudentEditPage() {
                         />
                     </div>
 
-                    <button
-                        type="submit"
-                        disabled={saving}
-                        className="mt-6 px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-                    >
-                        {saving ? "Сохранение..." : "Сохранить"}
-                    </button>
-                </form>
+                        <div className="flex justify-center mt-6">
+                            <button
+                                type="submit"
+                                disabled={saving}
+                                className="bg-[#3498DB] hover:bg-[#2F89C5] text-white px-6 py-3 rounded shadow disabled:opacity-50 transition"
+                            >
+                                {saving ? "Сохранение..." : "Сохранить"}
+                            </button>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     );
