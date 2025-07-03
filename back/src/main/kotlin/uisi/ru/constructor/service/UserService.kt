@@ -61,6 +61,7 @@ class UserService(
         val user = userRepository.getUserByUuid(UUID.fromString(request.uuid))?: return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ResponseMessage("Пользователя не найдено", false))
         request.email?.let {
             userRepository.findByEmail(request.email)?.let {
+                if (!(request.email == it.email))
                 return ResponseEntity.badRequest().body(ResponseMessage("Email уже занят"))
             }
         }
