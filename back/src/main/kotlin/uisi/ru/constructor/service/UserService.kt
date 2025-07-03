@@ -27,7 +27,7 @@ class UserService(
                 uuid = UUID.randomUUID(),
                 email = userRegister.email,
                 password = passwordEncoder.encode(userRegister.password),
-                role = Roles.valueOf(userRegister.role).toString(),
+                role = Roles.valueOf(userRegister.role.uppercase()).toString(),
             )
             userRepository.save(newUser)
             return ResponseEntity.ok().body(ResponseMessage("Новый пользователь успешно добавлен",true))
