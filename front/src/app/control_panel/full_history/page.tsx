@@ -31,6 +31,7 @@ export default function ReportFullHistory() {
 
         const loadReports = async () => {
             const result = await ReportsFullHistory();
+            console.log(result)
 
             if (result.success) {
                 console.log(result.data)
