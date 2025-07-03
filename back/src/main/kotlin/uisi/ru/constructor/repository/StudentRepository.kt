@@ -8,4 +8,5 @@ import java.util.UUID
 @Repository
 interface StudentRepository: JpaRepository<Student, UUID> {
     fun getStudentByStudIdAndEnrlOrderNumber(studId: String, enrlOrderNumber: String): Student?
+    fun getStudentByUuid(uuid: UUID): Student?
 }

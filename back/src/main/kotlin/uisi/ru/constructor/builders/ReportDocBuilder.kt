@@ -21,6 +21,7 @@ class ReportDocBuilder(
     val data: MutableList<Map<String, String?>> = emptyList<Map<String,String?>>().toMutableList()
 
     private val tableColumns: Map<String, String> = mapOf(
+        "uuid" to "uuid",
         "Фамилия" to "surname",
         "Имя" to "name",
         "Отчество (при наличии)" to "patronymic",
@@ -61,6 +62,7 @@ class ReportDocBuilder(
         "Номер приказа о предоставлении академического отпуска (при наличии)" to "orderAcadNumber"
     )
     private val tableColumnsRev: Map<String, String> = mapOf(
+        "uuid" to "uuid",
         "surname" to "Фамилия",
         "name" to "Имя",
         "patronymic" to "Отчество (при наличии)",
