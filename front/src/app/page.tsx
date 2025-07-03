@@ -30,6 +30,18 @@ export default function HomePage() {
             button: 'Открыть историю',
             route: '/history',
         },
+        {
+            title: '🔍 Поиск студента',
+            description: 'Найдите студента по ФИО или другим параметрам.',
+            button: 'Перейти к поиску',
+            route: '/search',
+        },
+        {
+            title: '📊 Панель управления',
+            description: 'Управляйте пользователями и просматривайте историю запросов.',
+            button: 'Открыть панель',
+            route: '/control_panel',
+        },
     ]
 
     const scrollSlider = (direction: 'left' | 'right') => {
@@ -65,49 +77,48 @@ export default function HomePage() {
                     Здесь вы можете загрузить файл с данными, выбрать нужные колонки и получить готовый отчёт.
                 </p>
 
-                {/* Слайдер */}
-                <div className="relative w-full max-w-4xl overflow-hidden mb-10">
-                    <div
-                        className="flex gap-6 overflow-x-auto scrollbar-hide px-1 justify-center"
-                        ref={sliderRef}
-                    >
-                        {cards.map((card, idx) => (
-                            <div
-                                key={idx}
-                                className="w-[250px] md:min-w-[250px] bg-white shadow-md rounded-xl p-4 flex-shrink-0 border border-[#D5D8DC] relative pb-14"
-                            >
-                                <h2 className="text-xl font-semibold text-[#34495E] mb-2">{card.title}</h2>
-                                <p className="text-[#34495E] mb-3  text-center">{card.description}</p>
-                                <button
-                                    onClick={() => router.push(card.route)}
-                                    className="bg-[#3498DB] hover:bg-[#2F89C5] text-white px-4 py-2 rounded-md transition absolute bottom-4 left-4 right-4"
-                                >
-                                    {card.button}
-                                </button>
-                            </div>
-                        ))}
-                    </div>
+                <div className="relative w-full max-w-3xl mx-auto mb-10">
 
-                    {/* Кнопки прокрутки */}
                     <button
                         onClick={() => scrollSlider('left')}
-                        className="absolute left-0 top-1/2 -translate-y-1/2 bg-white shadow-md p-2 rounded-full hover:bg-gray-200"
+                        className="absolute left-[-40px] top-1/2 -translate-y-1/2 shadow-md p-2 rounded-full bg-[#3498DB] hover:bg-[#2F89C5] z-10"
                     >
                         ◀
                     </button>
                     <button
                         onClick={() => scrollSlider('right')}
-                        className="absolute right-0 top-1/2 -translate-y-1/2 bg-white shadow-md p-2 rounded-full hover:bg-gray-200"
+                        className="absolute right-[-40px] top-1/2 -translate-y-1/2 shadow-md p-2 rounded-full bg-[#3498DB] hover:bg-[#2F89C5] z-10"
                     >
                         ▶
                     </button>
+
+                    <div className="overflow-hidden rounded-lg ">
+                        <div
+                            ref={sliderRef}
+                            className="flex gap-2 overflow-x-auto scroll-smooth scrollbar-hide px-1 flex-nowrap pb-4"
+                        >
+                            {cards.map((card, idx) => (
+                                <div
+                                    key={idx}
+                                    className="w-[249px] min-w-[249px] bg-white shadow-md rounded-xl p-4 flex-shrink-0 relative pb-14 border border-[#D5D8DC]"
+                                >
+                                    <h2 className="text-lg font-semibold text-[#34495E] mb-2">{card.title}</h2>
+                                    <p className="text-[#34495E] mb-3 text-center">{card.description}</p>
+                                    <button
+                                        onClick={() => router.push(card.route)}
+                                        className="bg-[#3498DB] hover:bg-[#2F89C5] text-white px-4 py-2 rounded-md transition absolute bottom-4 left-4 right-4"
+                                    >
+                                        {card.button}
+                                    </button>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
                 </div>
 
-                {/* Инструкция */}
                 <div className="bg-white rounded-xl shadow-lg p-6 max-w-4xl w-full text-[#34495E] border border-[#D5D8DC]">
                     <h2 className="text-2xl font-bold mb-6">📘 Пошаговая инструкция</h2>
 
-                    {/* Часть 1 */}
                     <div className="mb-6">
                         <h3 className="text-xl font-semibold mb-2">🔹 Часть 1: Загрузка файла</h3>
                         <ol className="list-decimal list-inside space-y-3">
@@ -120,7 +131,6 @@ export default function HomePage() {
                         </ol>
                     </div>
 
-                    {/* Часть 2 */}
                     <div>
                         <h3 className="text-xl font-semibold mb-2">🔹 Часть 2: Создание отчёта</h3>
                         <ol className="list-decimal list-inside space-y-3">

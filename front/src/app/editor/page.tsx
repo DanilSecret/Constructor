@@ -51,7 +51,6 @@ export default function ReportEditor() {
                         />
                     </Link>
 
-                    {/* Заголовок */}
                     <h1 className="text-lg text-center flex-1 -ml-6 text-[#34495E]">
                         Редактор отчёта
                     </h1>
@@ -71,17 +70,12 @@ export default function ReportEditor() {
                             Используйте фильтры, чтобы ограничить выборку данных.
                         </div>
                     </div>
-
-
                 </div>
 
-                {/* Основное содержимое */}
-                <div className="flex flex-1 overflow-hidden p-4 gap-4">
-                    {/* Левая часть */}
-                    <div className="flex-1 flex flex-col gap-4 overflow-auto">
-                        {/* Блок фильтров */}
-                        <div className="max-w-[1030px] flex-[3] bg-white rounded shadow p-2 max-h-[400px] overflow-y-auto border border-[#D5D8DC]">
 
+                <div className="flex flex-1 overflow-hidden p-4 gap-4">
+                    <div className="flex-1 flex flex-col gap-4 overflow-auto">
+                        <div className="max-w-[1030px] flex-[3] bg-white rounded shadow p-2 max-h-[400px] overflow-y-auto border border-[#D5D8DC]">
                         <h2 className="text-lg font-semibold mb-2 text-[#34495E]">Фильтры</h2>
                             {filters.length === 0 && <p className="text-gray-500">Фильтры отсутствуют</p>}
                             <ul className="space-y-3">
@@ -115,7 +109,6 @@ export default function ReportEditor() {
                             </ul>
                         </div>
 
-                        {/* Блок соединений */}
                         <div
                             className="max-w-[1030px] flex-[3] bg-white rounded shadow p-2 max-h-[400px] overflow-y-auto border border-[#D5D8DC]">
                             <h2 className="text-xl font-semibold mb-4 text-[#34495E]">Соединения</h2>
@@ -143,7 +136,6 @@ export default function ReportEditor() {
                         </div>
                     </div>
 
-                    {/* Правая панель управления */}
                     <div className="w-49 flex flex-col gap-3 ">
                         <Link
                             href="/editor/add_filter"
