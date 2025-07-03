@@ -47,7 +47,7 @@ class UserController(
     }
 
     @PostMapping("/listStudents")
-//    fun getStudents(@RequestBody filter: List<Map<String, String?>>?): ResponseEntity<Any> {
+//    fun getStudents(@RequestBody filter: MapRequest): ResponseEntity<Any> {
     fun getStudents(@RequestBody filter: ListStudentsRequest): ResponseEntity<Any> {
         val filterMap: List<Map<String, String?>> = listOf(
             mapOf("Фамилия" to filter.search),
@@ -63,10 +63,10 @@ class UserController(
     }
 
     @PutMapping("/update")
-    fun updStudent(@RequestBody rawStudentUpdate: Map<String, String?>): ResponseEntity<Any> {
+    fun updStudent(@RequestBody rawStudentUpdate: MapRequest): ResponseEntity<Any> {
         val formatter = SimpleDateFormat("dd.MM.yyyy")
 
-        val studentMap = rawStudentUpdate.map { (key, value) ->
+        val studentMap = rawStudentUpdate.map.map { (key, value) ->
             val parsedValue = when (value?.lowercase()?.trim()) {
                 "да" -> true
                 "нет" -> false
