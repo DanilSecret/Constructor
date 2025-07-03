@@ -81,13 +81,13 @@ export default function HomePage() {
 
                     <button
                         onClick={() => scrollSlider('left')}
-                        className="absolute left-[-40px] top-1/2 -translate-y-1/2 shadow-md p-2 rounded-full bg-[#3498DB] hover:bg-[#2F89C5] z-10"
+                        className="absolute left-[-40px] top-1/2 -translate-y-1/2 shadow-md p-2 rounded-full bg-[#3498DB] hover:bg-[#2F89C5] z-10 cursor-pointer"
                     >
                         ◀
                     </button>
                     <button
                         onClick={() => scrollSlider('right')}
-                        className="absolute right-[-40px] top-1/2 -translate-y-1/2 shadow-md p-2 rounded-full bg-[#3498DB] hover:bg-[#2F89C5] z-10"
+                        className="absolute right-[-40px] top-1/2 -translate-y-1/2 shadow-md p-2 rounded-full bg-[#3498DB] hover:bg-[#2F89C5] z-10 cursor-pointer"
                     >
                         ▶
                     </button>
@@ -106,7 +106,7 @@ export default function HomePage() {
                                     <p className="text-[#34495E] mb-3 text-center">{card.description}</p>
                                     <button
                                         onClick={() => router.push(card.route)}
-                                        className="bg-[#3498DB] hover:bg-[#2F89C5] text-white px-4 py-2 rounded-md transition absolute bottom-4 left-4 right-4"
+                                        className="bg-[#3498DB] hover:bg-[#2F89C5] text-white px-4 py-2 rounded-md transition absolute bottom-4 left-4 right-4 cursor-pointer"
                                     >
                                         {card.button}
                                     </button>

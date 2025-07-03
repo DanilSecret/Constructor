@@ -40,7 +40,7 @@ export default function Header() {
                         <div className="flex items-center gap-4">
                             <button
                                 onClick={destroyCookie}
-                                className="hover:underline flex flex-row gap-2"
+                                className="hover:underline flex flex-row gap-2 cursor-pointer"
                             >
                                 Выйти
                                 <Image src="/exit.svg" alt="exit" width={20} height={20}/>

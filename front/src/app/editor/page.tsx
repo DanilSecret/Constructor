@@ -56,7 +56,7 @@ export default function ReportEditor() {
                     </h1>
 
                     <div className="relative group">
-                        <div className="text-blue-600 cursor-pointer text-sm underline">
+                        <div className="text-blue-600 cursor-help text-sm underline ">
                             <Image
                                 src="/Question.svg"
                                 alt="Вопрос"
@@ -95,12 +95,12 @@ export default function ReportEditor() {
                                             className="absolute top-1/2 right-1 flex gap-4 items-center transform -translate-y-1/2">
                                             <Link href={`/editor/edit_filter/${idx}`}>
                                                 <div className="border border-[#D5D8DC] rounded p-1">
-                                                    <Image src="/Edit.svg" alt="Редактирование" width={24} height={24}/>
+                                                    <Image src="/Edit.svg" alt="Редактирование" width={24} height={24} className="cursor-pointer"/>
                                                 </div>
                                             </Link>
                                             <button onClick={() => removeFilter(idx)}>
                                                 <div className="border border-[#D5D8DC] rounded p-1">
-                                                    <Image src="/XLg.svg" alt="Удалить" width={24} height={24}/>
+                                                    <Image src="/XLg.svg" alt="Удалить" width={24} height={24} className="cursor-pointer"/>
                                                 </div>
                                             </button>
                                         </div>
@@ -125,7 +125,7 @@ export default function ReportEditor() {
 
                                         <div className="absolute top-1 right-1 flex gap-2">
                                             <button onClick={() => removeJoin(idx)}>
-                                                <div className="border border-[#D5D8DC] rounded p-1">
+                                                <div className="border border-[#D5D8DC] rounded p-1 cursor-pointer">
                                                     <Image src="/XLg.svg" alt="Удалить" width={24} height={24}/>
                                                 </div>
                                             </button>
@@ -151,13 +151,13 @@ export default function ReportEditor() {
                         </Link>
                         <button
                             onClick={resetAll}
-                            className="bg-[#3498DB] hover:bg-[#2F89C5] transition text-white py-2 px-4 rounded"
+                            className="bg-[#3498DB] hover:bg-[#2F89C5] transition text-white py-2 px-4 rounded cursor-pointer"
                         >
                             Очистить всё
                         </button>
                         <button
                             onClick={handleConfirm}
-                            className="bg-[#3498DB] hover:bg-[#2F89C5] transition text-white py-2 px-4 rounded mt-auto"
+                            className="bg-[#3498DB] hover:bg-[#2F89C5] transition text-white py-2 px-4 rounded mt-auto cursor-pointer"
                         >
                             Подтвердить
                         </button>
