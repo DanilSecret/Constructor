@@ -4,9 +4,14 @@ import {Columns, StudentFull} from "@/app/models/models";
 import {handleAxiosError} from "@/app/Api/handleAxiosError";
 import {Filter} from "@/store/filter_joins_store";
 
+const axiosClient = axios.create({
+    baseURL: "http://192.168.237.187:8080/api",
+    timeout: 10000,
+});
+
 export default async function AuthUser(email: string, password: string) {
     try {
-        const response = await axios.post("http://localhost:8080/api/auth/login", { email, password }, { withCredentials: true, timeout: 10000 });
+        const response = await axiosClient.post("/auth/login", { email, password }, { withCredentials: true, timeout: 10000 });
         const result = response.data;
         return { success: true, message: 'Успешный вход', result: result.user };
     } catch (err) {
@@ -38,7 +43,7 @@ export default async function AuthUser(email: string, password: string) {
 }
 
 export async function logout() {
-    await axios.delete("http://localhost:8080/api/auth/logout", {
+    await axios.delete("/auth/logout", {
         withCredentials: true,
     });
 }
@@ -47,7 +52,7 @@ export async function UploadFile(file: File): Promise<{ success: boolean; messag
     const formData = new FormData();
     formData.append("file", file);
     try {
-        const response = await axios.post("http://localhost:8080/api/user/upload", formData, {
+        const response = await axiosClient.post("/user/upload", formData, {
             headers: {
                 "Content-Type": "multipart/form-data",
             },
@@ -64,7 +69,7 @@ export async function UploadFile(file: File): Promise<{ success: boolean; messag
 
 export async function GetAllColumns(): Promise<{ success: boolean; message?: string; data?: Columns[]; }> {
     try {
-        const response = await axios.get<Columns[]>("http://localhost:8080/api/user/getCols",{withCredentials: true,});
+        const response = await axiosClient.get<Columns[]>("/user/getCols",{withCredentials: true,});
 
         return {
             success: true,
@@ -76,8 +81,8 @@ export async function GetAllColumns(): Promise<{ success: boolean; message?: str
 }
 
 export async function downloadExcel(userUUID:string, col: string[], filter: Filter[], joins: string[][]): Promise<Blob> {
-    const response = await axios.post(
-        "http://localhost:8080/api/user/download",
+    const response = await axiosClient.post(
+        "/user/download",
         { userUUID, col, filter, joins },
         { withCredentials: true, responseType: "blob" }
     );
@@ -93,8 +98,8 @@ export async function ReportsHistory(uuid: string | undefined) {
         };
     }
     try {
-        const response = await axios.post(
-            "http://localhost:8080/api/user/selfHistory",
+        const response = await axiosClient.post(
+            "/user/selfHistory",
             { uuid },
             { withCredentials: true }
         );
@@ -110,8 +115,8 @@ export async function ReportsHistory(uuid: string | undefined) {
 export async function ReportsFullHistory() {
 
     try {
-        const response = await axios.get(
-            "http://localhost:8080/api/user/allHistory",
+        const response = await axiosClient.get(
+            "/user/allHistory",
             { withCredentials: true }
         );
         return {
@@ -126,8 +131,8 @@ export async function ReportsFullHistory() {
 
 export async function getAllUsers() {
     try {
-        const response = await axios.get(
-            "http://localhost:8080/api/admin/listUsers",
+        const response = await axiosClient.get(
+            "/admin/listUsers",
             { withCredentials: true }
         );
         return { success: true, data: response.data, message: "Успешно",};
@@ -138,8 +143,8 @@ export async function getAllUsers() {
 
 export async function getUserByUUID(uuid:string ) {
     try {
-        const response = await axios.post(
-            "http://localhost:8080/api/admin/getUser",
+        const response = await axiosClient.post(
+            "/admin/getUser",
             { uuid },
             { withCredentials: true}
         );
@@ -150,8 +155,8 @@ export async function getUserByUUID(uuid:string ) {
 }
 export async function updateUserByUUID(uuid:string, email: string, password: string, role: string ) {
     try {
-        const response = await axios.put(
-            "http://localhost:8080/api/admin/update",
+        const response = await axiosClient.put(
+            "/admin/update",
             { uuid, email, password, role },
             { withCredentials: true}
         );
@@ -163,8 +168,8 @@ export async function updateUserByUUID(uuid:string, email: string, password: str
 
 export async function CreateUser(email: string, password: string, role: string ) {
     try {
-        const response = await axios.post(
-            "http://localhost:8080/api/admin/register",
+        const response = await axiosClient.post(
+            "/admin/register",
             { email, password, role },
             { withCredentials: true}
         );
@@ -177,7 +182,7 @@ export async function CreateUser(email: string, password: string, role: string )
 
 export async function deleteUserByUUID(uuid: string) {
     try {
-        const response = await axios.delete("http://localhost:8080/api/admin/delete", {
+        const response = await axiosClient.delete("/admin/delete", {
             data: { uuid },
             withCredentials: true,
         });
@@ -193,8 +198,8 @@ export async function deleteUserByUUID(uuid: string) {
 
 export async function searchStudents( search: string ) {
     try {
-        const response = await axios.post(
-            `http://localhost:8080/api/user/listStudents`, { search },
+        const response = await axiosClient.post(
+            `/user/listStudents`, { search },
             { withCredentials: true});
         return {
             success: true,
@@ -208,8 +213,8 @@ export async function searchStudents( search: string ) {
 
 export async function GetStudentById( uuid: string ) {
     try {
-        const response = await axios.post(
-            `http://localhost:8080/api/user/getStudent`, { uuid },
+        const response = await axiosClient.post(
+            `/user/getStudent`, { uuid },
             { withCredentials: true});
         return {
             success: true,
@@ -223,8 +228,8 @@ export async function GetStudentById( uuid: string ) {
 
 export async function updateStudentByUUID(student: StudentFull) {
     try {
-        const response = await axios.put(
-            "http://localhost:8080/api/user/update",
+        const response = await axiosClient.put(
+            "/user/update",
             { student },
             { withCredentials: true});
         return { success: true, result: response.data, message: "Успешно", };
@@ -235,8 +240,8 @@ export async function updateStudentByUUID(student: StudentFull) {
 
 export async function deleteStudentByUUID(uuid: string) {
     try {
-        const response = await axios.delete(
-            "http://localhost:8080/api/user/delete", {
+        const response = await axiosClient.delete(
+            "/user/delete", {
             data: { uuid },
             withCredentials: true,
         });

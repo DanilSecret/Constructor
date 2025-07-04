@@ -139,7 +139,7 @@ class ReportDocBuilder(
             root.get<String>(column)?.let {
                 when(value) {
                     is String -> cb.like(cb.lower(it), "%${value.lowercase()}%")
-                    else -> cb.equal(it, value.toString())
+                    else -> cb.equal(it, value)
                 }
             }
         }

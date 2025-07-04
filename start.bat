@@ -1,7 +1,7 @@
 @echo off
 setlocal
 
-set JAR_BUILD=back\build\libs\constructor.jar
+set JAR_BUILD=back\build\libs\constructor-0.0.1-SNAPSHOT.jar
 set HEALTH_URL=http://localhost:8080/actuator/health
 set FRONT_DIR=front
 set FRONT_PORT=80
