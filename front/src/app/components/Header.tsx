@@ -7,6 +7,7 @@ import {logout} from "@/app/Api/Api";
 
 export default function Header() {
     const isAuth = useUserStore((state) => state.isAuth);
+    const userData = useUserStore((state) => state.userData);
     const { setUserData, setIsAuth } = useUserStore();
 
     const destroyCookie = async () => {
@@ -21,7 +22,6 @@ export default function Header() {
         }
     };
 
-
     return (
         <header className="bg-[#2C3E50] text-white w-full px-4 py-3 shadow-md">
             <div className="max-w-screen-xl mx-auto flex items-center justify-between">
@@ -32,7 +32,9 @@ export default function Header() {
                         <Link href="/columns" className="hover:underline">Создать отчет</Link>
                         <Link href="/history" className="hover:underline">История отчетов</Link>
                         <Link href="/search" className="hover:underline">Поиск студентов</Link>
-                        <Link href="/control_panel" className="hover:underline">Панель управления</Link>
+                        {(userData?.role === "ADMIN" || userData?.role === "DEANERY") && (
+                            <Link href="/control_panel" className="hover:underline">Панель управления</Link>
+                        )}
                     </nav>
                 </div>
                 <div className="flex items-center gap-6 text-sm">

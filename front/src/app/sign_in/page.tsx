@@ -84,7 +84,7 @@ export default function Login_form() {
                         </div>
 
                         <button type="submit"
-                                className="w-full bg-[#3498DB] text-white py-2 px-4 rounded-lg">
+                                className="w-full bg-[#3498DB] hover:bg-[#2F89C5] cursor-pointer text-white py-2 px-4 rounded-lg cursor-pointer">
                             Войти
                         </button>
 

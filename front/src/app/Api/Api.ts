@@ -5,7 +5,8 @@ import {handleAxiosError} from "@/app/Api/handleAxiosError";
 import {Filter} from "@/store/filter_joins_store";
 
 const axiosClient = axios.create({
-    baseURL: "http://192.168.237.187:8080/api",
+    //baseURL: "http://192.168.237.187:8080/api",
+    baseURL: "http://localhost:8080/api",
     timeout: 10000,
 });
 
@@ -43,7 +44,7 @@ export default async function AuthUser(email: string, password: string) {
 }
 
 export async function logout() {
-    await axios.delete("/auth/logout", {
+    await axiosClient.delete("/auth/logout", {
         withCredentials: true,
     });
 }

@@ -40,7 +40,7 @@ export default function UserManagementPage() {
     useEffect(() => {
         const filtered = users.filter((user) =>
             user.email.toLowerCase().includes(search.toLowerCase()) ||
-            user.role.toLowerCase().includes(search.toLowerCase())
+            translateRole(user.role).toLowerCase().includes(search.toLowerCase())
         );
         setFilteredUsers(filtered);
     }, [search, users]);
